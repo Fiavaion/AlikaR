@@ -134,8 +134,12 @@ public final class ARSceneController: NSObject {
 
     public static func geoAvailable(at c: Coordinate) async -> Bool {
         guard ARGeoTrackingConfiguration.isSupported else { return false }
-        return (try? await ARGeoTrackingConfiguration.checkAvailability(
-            at: CLLocationCoordinate2D(latitude: c.lat, longitude: c.long))) ?? false
+        // No async overload in the SDK; wrap the completion handler.
+        return await withCheckedContinuation { cont in
+            ARGeoTrackingConfiguration.checkAvailability(
+                at: CLLocationCoordinate2D(latitude: c.lat, longitude: c.long)
+            ) { available, _ in cont.resume(returning: available) }
+        }
     }
 
     // MARK: Placement

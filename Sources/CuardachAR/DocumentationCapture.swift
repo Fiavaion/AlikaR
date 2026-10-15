@@ -13,10 +13,12 @@ public final class DocumentationCapture {
     public enum Failure: LocalizedError {
         case notAllowed
         case snapshotFailed
+        case recordingFailed
         public var errorDescription: String? {
             switch self {
             case .notAllowed: "Cuardach isn't allowed to add to your Photos. You can change this in Settings."
             case .snapshotFailed: "The photo couldn't be taken."
+            case .recordingFailed: "The recording couldn't be saved."
             }
         }
     }
@@ -47,13 +49,25 @@ public final class DocumentationCapture {
     public func startRecording(microphone: Bool = false) async throws {
         let recorder = RPScreenRecorder.shared()
         recorder.isMicrophoneEnabled = microphone
-        try await recorder.startRecording()
+        // A bare startRecording() resolves to the synchronous call with a nil
+        // handler, which drops errors (such as the user declining). Wait for the handler.
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+            recorder.startRecording { error in
+                if let error { cont.resume(throwing: error) } else { cont.resume() }
+            }
+        }
     }
 
     /// Stops recording and returns ReplayKit's preview, where the student
     /// trims and saves the clip.
     public func stopRecording() async throws -> RPPreviewViewController {
-        try await RPScreenRecorder.shared().stopRecording()
+        // The async overload of stopRecording returns Void, so use the
+        // completion-handler form that delivers the preview controller.
+        try await withCheckedThrowingContinuation { cont in
+            RPScreenRecorder.shared().stopRecording { preview, error in
+                if let preview { cont.resume(returning: preview) } else { cont.resume(throwing: error ?? Failure.recordingFailed) }
+            }
+        }
     }
 }
 #endif

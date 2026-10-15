@@ -94,7 +94,7 @@ struct StudioPanel: View {
                 }
             }
             .navigationTitle(e.name)
-            .fileImporter(isPresented: $importingVariant, allowedContentTypes: AuthorView.importTypes) { result in
+            .fileImporter(isPresented: $importingVariant, allowedContentTypes: AuthorScreen.importTypes) { result in
                 if case .success(let url) = result {
                     let name = variantName
                     variantName = ""
