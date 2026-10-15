@@ -55,3 +55,25 @@ targets:
         product: CuardachUI
       - package: GLTFKit2
         product: GLTFKit2
+
+  CuardachUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: CuardachUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ie.ncad.cuardach.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Cuardach
+    dependencies:
+      - target: Cuardach
+
+schemes:
+  Cuardach:
+    build:
+      targets:
+        Cuardach: all
+    test:
+      targets:
+        - CuardachUITests

@@ -9,9 +9,13 @@ import GLTFKit2
 struct CuardachApp: App {
     /// A file, `cuardach://` link or https link the system asked us to open.
     @State private var incoming: URL?
-    @State private var store = LibraryStore()
+    @State private var store: LibraryStore
 
     init() {
+        #if DEBUG
+        UITestSupport.prepareIfRequested()
+        #endif
+        _store = State(initialValue: LibraryStore())
         #if canImport(GLTFKit2)
         // GLB/glTF import (PRD A2) is the one third-party component.
         GLTFLoading.loader = { url in try await GLTFRealityKitLoader.load(from: url) }
