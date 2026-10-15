@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Cuardach</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ga</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+
+	<!-- PRD C3, C4, C8: purpose strings say exactly what each permission is for. -->
+	<key>NSCameraUsageDescription</key>
+	<string>Cuardach uses the camera to show and place AR content. Nothing is recorded unless you choose to save a scan, a marker or a photo.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used on this device to guide you to AR content and, when you choose, to pin content to a place. It is never sent anywhere.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion is used to remind you to look up while you walk.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Cuardach saves the documentation photos and videos you take of your AR work to Photos.</string>
+
+	<!-- PRD S4: the .arhunt document type and the cuardach:// scheme. -->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>ie.ncad.arhunt</string>
+			<key>UTTypeDescription</key>
+			<string>Cuardach AR Experience</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>arhunt</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/vnd.ncad.arhunt+zip</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Cuardach AR Experience</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>ie.ncad.arhunt</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>ie.ncad.cuardach</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cuardach</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- Experiences live in Documents and are visible in the Files app. -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arkit</string>
+	</array>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

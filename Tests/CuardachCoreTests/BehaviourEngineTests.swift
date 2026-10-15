@@ -220,6 +220,15 @@ final class BehaviourEngineTests: XCTestCase {
         XCTAssertTrue(eng.tap("a", at: 1).isEmpty, "already found")
     }
 
+    func testSimulateFiresAnyTrigger() {
+        var b = Behaviour(trigger: .timeWindow, retrigger: .never, actions: [[.setState("night")]])
+        b.window = TimeWindow(from: "21:00", to: "22:00")
+        var eng = BehaviourEngine(experience: experience([element("e", [b])]))
+        XCTAssertEqual(eng.simulate("e", behaviour: 0, at: 0), [.state(elementId: "e", value: "night")])
+        XCTAssertTrue(eng.simulate("e", behaviour: 0, at: 1).isEmpty, "never still applies")
+        XCTAssertTrue(eng.simulate("e", behaviour: 5, at: 1).isEmpty)
+    }
+
     func testUnknownActionsAreSkipped() {
         let b = Behaviour(trigger: .tap, actions: [[Action(ActionType(rawValue: "teleport"))], [.setState("after")]])
         var eng = BehaviourEngine(experience: experience([element("e", [b])]))

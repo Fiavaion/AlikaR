@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  core:
+    name: Core tests (Linux)
+    runs-on: ubuntu-latest
+    container: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+      - name: Validate and round-trip the sample bundle
+        run: |
+          swift run cuardach validate Samples/courtyard-hunt.arhunt
+          swift run cuardach pack Samples/courtyard-hunt.arhunt -o /tmp/sample.arhunt
+          swift run cuardach validate /tmp/sample.arhunt
+      - name: Briefs doc is up to date
+        run: |
+          swift run cuardach briefs --markdown > /tmp/briefs.md
+          diff -u docs/briefs.md /tmp/briefs.md

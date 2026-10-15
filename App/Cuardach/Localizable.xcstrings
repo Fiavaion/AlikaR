@@ -1,0 +1,996 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%lld of %lld found": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%1$lld as %2$lld aimsithe"
+          }
+        }
+      }
+    },
+    "About": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Faoi"
+          }
+        }
+      }
+    },
+    "About this experience": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Faoin eispéireas seo"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir leis"
+          }
+        }
+      }
+    },
+    "Add a printed marker": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir marcóir priontáilte leis"
+          }
+        }
+      }
+    },
+    "Add element": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir eilimint leis"
+          }
+        }
+      }
+    },
+    "Add text": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir téacs leis"
+          }
+        }
+      }
+    },
+    "Adjust": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Coigeartaigh"
+          }
+        }
+      }
+    },
+    "After being looked at": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tar éis féachaint air"
+          }
+        }
+      }
+    },
+    "Anchors": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ancairí"
+          }
+        }
+      }
+    },
+    "Approximate": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Neasach"
+          }
+        }
+      }
+    },
+    "At certain times of day": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ag amanna áirithe den lá"
+          }
+        }
+      }
+    },
+    "Behaviours": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Iompraíochtaí"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cealaigh"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dún"
+          }
+        }
+      }
+    },
+    "Couldn't open": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Níorbh fhéidir é a oscailt"
+          }
+        }
+      }
+    },
+    "Create": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cruthaigh"
+          }
+        }
+      }
+    },
+    "Credit and licence": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Admháil agus ceadúnas"
+          }
+        }
+      }
+    },
+    "Credits": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Admhálacha"
+          }
+        }
+      }
+    },
+    "Crit": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Léirmheas"
+          }
+        }
+      }
+    },
+    "Crit notes": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nótaí léirmheasa"
+          }
+        }
+      }
+    },
+    "Cuardach": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuardach"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Scrios"
+          }
+        }
+      }
+    },
+    "Discard": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Caith uait"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Déanta"
+          }
+        }
+      }
+    },
+    "Downloading…": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Á íoslódáil…"
+          }
+        }
+      }
+    },
+    "Duplicate": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dúbláil"
+          }
+        }
+      }
+    },
+    "Elements": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eilimintí"
+          }
+        }
+      }
+    },
+    "Exhibition catalogue": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Catalóg taispeántais"
+          }
+        }
+      }
+    },
+    "Found": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aimsithe"
+          }
+        }
+      }
+    },
+    "Found list": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Liosta na n-aimsithe"
+          }
+        }
+      }
+    },
+    "From Files": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ó Chomhaid"
+          }
+        }
+      }
+    },
+    "From Photos": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ó Ghrianghraif"
+          }
+        }
+      }
+    },
+    "Import": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Iompórtáil"
+          }
+        }
+      }
+    },
+    "Issue": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fadhb"
+          }
+        }
+      }
+    },
+    "It's nearby. Look around.": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tá sé in aice láimhe. Féach thart."
+          }
+        }
+      }
+    },
+    "Label, credit and variants": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lipéad, admháil agus leaganacha"
+          }
+        }
+      }
+    },
+    "Leave a note": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fág nóta"
+          }
+        }
+      }
+    },
+    "Localised": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Logánaithe"
+          }
+        }
+      }
+    },
+    "Lock at 1:1": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Glasáil ag 1:1"
+          }
+        }
+      }
+    },
+    "Look up while you walk": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Féach suas agus tú ag siúl"
+          }
+        }
+      }
+    },
+    "Make catalogue": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Déan catalóg"
+          }
+        }
+      }
+    },
+    "Make your first experience": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Déan do chéad eispéireas"
+          }
+        }
+      }
+    },
+    "Map": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Léarscáil"
+          }
+        }
+      }
+    },
+    "Marker-precise": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Beacht le marcóir"
+          }
+        }
+      }
+    },
+    "My experiences": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mo chuid eispéireas"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ainm"
+          }
+        }
+      }
+    },
+    "New experience": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eispéireas nua"
+          }
+        }
+      }
+    },
+    "Not anchored": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Gan ancaire"
+          }
+        }
+      }
+    },
+    "Not found yet": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Gan aimsiú fós"
+          }
+        }
+      }
+    },
+    "Nothing selected": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Níl aon rud roghnaithe"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Object-precise": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Beacht le réad"
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Oscailte"
+          }
+        }
+      }
+    },
+    "Open a file": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Oscail comhad"
+          }
+        }
+      }
+    },
+    "Open original link": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Oscail an nasc bunaidh"
+          }
+        }
+      }
+    },
+    "Opened": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Oscailte"
+          }
+        }
+      }
+    },
+    "Pin here": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Greamaigh anseo"
+          }
+        }
+      }
+    },
+    "Pin to this location": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Greamaigh den láthair seo"
+          }
+        }
+      }
+    },
+    "Place at the crosshair": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir ag an gcrosghrua"
+          }
+        }
+      }
+    },
+    "Play": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Seinn"
+          }
+        }
+      }
+    },
+    "Preview as player": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réamhamharc mar imreoir"
+          }
+        }
+      }
+    },
+    "Printed markers": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Marcóirí priontáilte"
+          }
+        }
+      }
+    },
+    "Question": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ceist"
+          }
+        }
+      }
+    },
+    "Record a documentation video": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Taifead físeán doiciméadúcháin"
+          }
+        }
+      }
+    },
+    "Redo": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Athdhéan"
+          }
+        }
+      }
+    },
+    "Remix a copy": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Athmheasc cóip"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Athainmnigh"
+          }
+        }
+      }
+    },
+    "Resolve": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réitigh"
+          }
+        }
+      }
+    },
+    "Resolved": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Réitithe"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sábháil"
+          }
+        }
+      }
+    },
+    "Saved to Photos.": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sábháilte i nGrianghraif."
+          }
+        }
+      }
+    },
+    "Scan a QR code": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Scan cód QR"
+          }
+        }
+      }
+    },
+    "Share": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Comhroinn"
+          }
+        }
+      }
+    },
+    "Share and export": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Comhroinn agus easpórtáil"
+          }
+        }
+      }
+    },
+    "Simulate": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ionsamhlaigh"
+          }
+        }
+      }
+    },
+    "Site-precise": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Beacht go leibhéal láithreáin"
+          }
+        }
+      }
+    },
+    "Something went wrong": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tharla earráid"
+          }
+        }
+      }
+    },
+    "Start again": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tosaigh arís"
+          }
+        }
+      }
+    },
+    "Statement": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ráiteas"
+          }
+        }
+      }
+    },
+    "Stop preview": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Stop an réamhamharc"
+          }
+        }
+      }
+    },
+    "Stop recording": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Stop an taifeadadh"
+          }
+        }
+      }
+    },
+    "Street-precise": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Beacht go leibhéal sráide"
+          }
+        }
+      }
+    },
+    "Strength": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Láidreacht"
+          }
+        }
+      }
+    },
+    "Studio briefs": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Treoracha stiúideo"
+          }
+        }
+      }
+    },
+    "Suggestion": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moladh"
+          }
+        }
+      }
+    },
+    "Take a documentation photo": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tóg grianghraf doiciméadúcháin"
+          }
+        }
+      }
+    },
+    "Text": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Téacs"
+          }
+        }
+      }
+    },
+    "Title": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Teideal"
+          }
+        }
+      }
+    },
+    "True size": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Fíormhéid"
+          }
+        }
+      }
+    },
+    "Undo": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cealaigh"
+          }
+        }
+      }
+    },
+    "Variants": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Leaganacha"
+          }
+        }
+      }
+    },
+    "Wall label": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lipéad balla"
+          }
+        }
+      }
+    },
+    "When it appears": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nuair a thagann sé i radharc"
+          }
+        }
+      }
+    },
+    "When someone comes near": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nuair a thagann duine gar dó"
+          }
+        }
+      }
+    },
+    "When someone walks away": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nuair a shiúlann duine uaidh"
+          }
+        }
+      }
+    },
+    "When tapped": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nuair a thapáiltear é"
+          }
+        }
+      }
+    },
+    "You found everything!": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "D'aimsigh tú gach rud!"
+          }
+        }
+      }
+    },
+    "Your name": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "D'ainm"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

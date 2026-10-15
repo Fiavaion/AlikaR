@@ -10,6 +10,14 @@
 
 import PackageDescription
 
+// The ARKit/SwiftUI layers use Swift 5 mode with complete concurrency
+// checking reported as warnings: ARKit's delegate-heavy API surface is not
+// fully Sendable-annotated. CuardachCore is strict Swift 6.
+let appleUI: [SwiftSetting] = [
+    .swiftLanguageMode(.v5),
+    .enableUpcomingFeature("StrictConcurrency"),
+]
+
 let package = Package(
     name: "Cuardach",
     platforms: [
@@ -24,8 +32,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "CuardachCore"),
-        .target(name: "CuardachAR", dependencies: ["CuardachCore"]),
-        .target(name: "CuardachUI", dependencies: ["CuardachCore", "CuardachAR"]),
+        .target(name: "CuardachAR", dependencies: ["CuardachCore"], swiftSettings: appleUI),
+        .target(name: "CuardachUI", dependencies: ["CuardachCore", "CuardachAR"], swiftSettings: appleUI),
         .executableTarget(name: "cuardach", dependencies: ["CuardachCore"]),
         .testTarget(name: "CuardachCoreTests", dependencies: ["CuardachCore"]),
     ],

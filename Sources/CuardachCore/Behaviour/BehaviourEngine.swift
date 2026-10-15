@@ -171,6 +171,15 @@ public struct BehaviourEngine: Sendable {
         return out
     }
 
+    /// Fires one behaviour as if its trigger had happened: the author's
+    /// "simulate" button (PRD A10). Re-trigger rules still apply.
+    public mutating func simulate(_ elementId: String, behaviour index: Int, at t: Double) -> [EngineEvent] {
+        var out = advance(to: t)
+        resolved.insert(elementId)
+        out += fire(Key(element: elementId, index: index))
+        return out
+    }
+
     /// Advances timers (delays, fades, moves) without any other input.
     public mutating func tick(at t: Double) -> [EngineEvent] { advance(to: t) }
 
