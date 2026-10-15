@@ -40,7 +40,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Cuardach saves the documentation photos and videos you take of your AR work to Photos.</string>
 
-	<!-- PRD S4: the .arhunt document type and the cuardach:// scheme. -->
+	<!-- PRD S4: the .arhunt document type and the cuardach:// scheme. PRD A1: media document types. -->
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -78,6 +78,60 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>ie.ncad.arhunt</string>
+			</array>
+		</dict>
+		<!-- PRD A1: models, images, video and sound sent by AirDrop or "Open in…"
+		     go to author mode's importer. The system declares all of these types.
+		     Generic media is Alternate so Cuardach never becomes their default app. -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>3D Model</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.pixar.universal-scene-description-mobile</string>
+				<string>com.apple.reality</string>
+				<string>org.khronos.glb</string>
+				<string>org.khronos.gltf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Image</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Movie</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.movie</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.audio</string>
 			</array>
 		</dict>
 	</array>

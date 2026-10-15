@@ -8,6 +8,8 @@ import VisionKit
 /// Where an experience is opened.
 enum Route: Hashable {
     case author(URL)
+    /// Author mode that starts by importing a file sent to the app (PRD A1).
+    case authorImporting(URL, media: URL)
     case play(URL)
     case briefs
 }
@@ -18,6 +20,10 @@ public struct RootView: View {
     @State private var path: [Route] = []
     @State private var error: String?
     @Binding var incoming: URL?
+    /// A model, image, video or sound waiting for the author to pick an experience.
+    @State private var incomingMedia: StagedMedia?
+    @State private var mediaRoute: Route?
+    @AppStorage("authorName") private var authorName = ""
 
     /// `store` is owned by the App so it is created exactly once.
     public init(store: LibraryStore, incoming: Binding<URL?>) {
@@ -32,6 +38,8 @@ public struct RootView: View {
                     switch route {
                     case .author(let folder):
                         if let b = try? ExperienceBundle.open(folder: folder) { AuthorView(bundle: b) }
+                    case .authorImporting(let folder, let media):
+                        if let b = try? ExperienceBundle.open(folder: folder) { AuthorView(bundle: b, importing: media) }
                     case .play(let folder):
                         if let b = try? ExperienceBundle.open(folder: folder) { PlayerView(bundle: b, store: store.progress) }
                     case .briefs:
@@ -43,6 +51,24 @@ public struct RootView: View {
             guard let url else { return }
             incoming = nil
             Task { await open(url) }
+        }
+        .sheet(item: $incomingMedia, onDismiss: {
+            guard let r = mediaRoute else { return }
+            mediaRoute = nil
+            // Save and stop an open author session first, so its unsaved
+            // placements are on disk before the experience is reopened.
+            Task {
+                await AuthorModel.active?.stop()
+                path = [r]
+            }
+        }) { media in
+            ChooseExperienceSheet(fileName: media.file.lastPathComponent, experiences: store.authored) { choice in
+                importMedia(media.file, into: choice)
+            } cancel: {
+                LibraryStore.discardStagedMedia(media.file)
+                incomingMedia = nil
+            }
+            .interactiveDismissDisabled()
         }
         .alert("Couldn't open", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
             Button("OK", role: .cancel) {}
@@ -57,6 +83,10 @@ public struct RootView: View {
     /// Files from AirDrop/Files/Mail, `cuardach://open?url=` links and https links (PRD P1, S4).
     func open(_ url: URL) async {
         do {
+            if url.isFileURL, !Self.isBundleFile(url) {
+                try openMedia(url)
+                return
+            }
             let b: ExperienceBundle
             if url.isFileURL {
                 b = try store.open(file: url)
@@ -65,9 +95,94 @@ public struct RootView: View {
             } else {
                 throw URLError(.unsupportedURL)
             }
+            await AuthorModel.active?.stop()
             path = [.play(b.folder)]
         } catch {
             self.error = (error as? CustomStringConvertible)?.description ?? error.localizedDescription
+        }
+    }
+
+    static func isBundleFile(_ url: URL) -> Bool {
+        [BundleLayout.fileExtension, "zip"].contains(url.pathExtension.lowercased())
+    }
+
+    /// A model, image, video or sound from AirDrop or "Open in…" (PRD A1):
+    /// formats the importer refuses get the same message as the Files picker;
+    /// anything else waits for the author to choose an experience.
+    private func openMedia(_ url: URL) throws {
+        let staged = try store.stageIncomingMedia(url)
+        if let refusal = Self.importRefusal(staged) {
+            LibraryStore.discardStagedMedia(staged)
+            error = refusal
+            return
+        }
+        if let previous = incomingMedia { LibraryStore.discardStagedMedia(previous.file) }
+        incomingMedia = StagedMedia(file: staged)
+    }
+
+    /// Why the importer would turn a file away, using its own messages.
+    static func importRefusal(_ file: URL) -> String? {
+        let ext = file.pathExtension.lowercased()
+        guard let format = AssetPolicy.format(forExtension: ext) else {
+            return ImportPipeline.Failure.unsupported(ext).localizedDescription
+        }
+        return AssetMetrics(bytes: 0).warnings(format: format).first { $0.severity == .blocking }?.message
+    }
+
+    /// Opens author mode on the chosen experience (or a new one named after
+    /// the file) and runs the usual import there, once the sheet has gone.
+    private func importMedia(_ file: URL, into choice: ExperienceBundle?) {
+        do {
+            let target = try choice ?? store.create(title: file.deletingPathExtension().lastPathComponent, author: authorName)
+            mediaRoute = .authorImporting(target.folder, media: file)
+        } catch {
+            LibraryStore.discardStagedMedia(file)
+            self.error = error.localizedDescription
+        }
+        incomingMedia = nil
+    }
+}
+
+struct StagedMedia: Identifiable {
+    let id = UUID()
+    let file: URL
+}
+
+/// Asks where a file sent to the app should go (PRD A1).
+struct ChooseExperienceSheet: View {
+    let fileName: String
+    let experiences: [ExperienceBundle]
+    let choose: (ExperienceBundle?) -> Void
+    let cancel: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    Button { choose(nil) } label: {
+                        Label("New experience", systemImage: "plus")
+                    }
+                } footer: {
+                    Text("You'll place \(fileName) at the crosshair, as with Add from Files.")
+                }
+                if !experiences.isEmpty {
+                    Section("My experiences") {
+                        ForEach(experiences, id: \.folder) { b in
+                            Button { choose(b) } label: {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(b.experience.title).font(.headline).foregroundStyle(.primary)
+                                    Text(b.experience.author).font(.subheadline).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Add to which experience?")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel", action: cancel) }
+            }
         }
     }
 }

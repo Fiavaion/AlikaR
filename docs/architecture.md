@@ -52,7 +52,7 @@ The iOS layers can only be compiled with the iOS SDK. On Linux their sources are
 
 | ID | Status | Where / notes |
 | --- | --- | --- |
-| A1 | 🟡 | Files and Photos pickers (`AuthorView`). Importing a USDZ directly from AirDrop or the share sheet needs extra document types. |
+| A1 | ✅ | Files and Photos pickers (`AuthorView`). USDZ, Reality, GLB/glTF, images, video and sound sent by AirDrop or "Open in…" (document types in `Info.plist`) ask which experience to add to, then run the same import review in author mode (`RootView.openMedia`). |
 | A2 | 🟡 | `GLBInspector` warnings, GLTFKit2 loader injected by the app, review sheet. No rendered 3D preview in the sheet yet; the model appears when placed. |
 | A3, A5 | ⏳ | Blocked at import with a "convert on a Mac" message. |
 | A4 | ✅ | Images, video (HEVC alpha via `VideoMaterial`), audio. Chroma key is ⏳. |

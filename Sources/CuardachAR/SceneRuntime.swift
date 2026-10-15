@@ -120,6 +120,8 @@ public final class SceneRuntime {
             tweens.append(Tween(entity: b.container, kind: .spin(radians: radians, done: 0), duration: max(0.01, a.duration ?? 1), invocation: nil))
         case .playAudio:
             guard let resource = audioResource(for: a, element: inv.elementId, awaits: inv.awaitsCompletion) else { return finish(inv) }
+            // Input mode is now set on the entity, not the resource: keep sounds spatial.
+            if !b.container.components.has(SpatialAudioComponent.self) { b.container.components.set(SpatialAudioComponent()) }
             let controller = b.container.playAudio(resource)
             if let v = a.volume { controller.gain = 20 * log10(max(0.001, v)) }
             audio[inv.id] = controller
@@ -149,7 +151,7 @@ public final class SceneRuntime {
         let key = "\(path)#\(loop)"
         if let cached = audioCache[key] { return cached }
         guard let url = try? bundle.url(for: path),
-              let r = try? AudioFileResource.load(contentsOf: url, inputMode: .spatial, loadingStrategy: .preload, shouldLoop: loop)
+              let r = try? AudioFileResource.load(contentsOf: url, configuration: .init(loadingStrategy: .preload, shouldLoop: loop))
         else { return nil }
         audioCache[key] = r
         return r

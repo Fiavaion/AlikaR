@@ -61,6 +61,31 @@ public final class LibraryStore {
         return b
     }
 
+    /// Copies a model, image, video or sound sent from AirDrop or "Open in…"
+    /// (PRD A1) to a private folder of its own, keeping its file name, so the
+    /// author-mode importer can read it after the system's access ends. The
+    /// system's copy in Documents/Inbox is removed so it doesn't pile up.
+    func stageIncomingMedia(_ url: URL) throws -> URL {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("Incoming", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let dest = dir.appendingPathComponent(url.lastPathComponent)
+        try FileManager.default.copyItem(at: url, to: dest)
+        let inbox = authoringDir.deletingLastPathComponent().appendingPathComponent("Inbox", isDirectory: true)
+        if url.resolvingSymlinksInPath().path.hasPrefix(inbox.resolvingSymlinksInPath().path + "/") {
+            try? FileManager.default.removeItem(at: url)
+        }
+        return dest
+    }
+
+    /// Removes a file made by `stageIncomingMedia` once it is imported or declined.
+    static func discardStagedMedia(_ file: URL) {
+        try? FileManager.default.removeItem(at: file.deletingLastPathComponent())
+    }
+
     /// Downloads a bundle from an HTTPS link or QR code, then opens it (PRD P1, S3).
     public func download(_ link: DeepLink) async throws -> ExperienceBundle {
         guard case .download(let remote) = link else { throw URLError(.unsupportedURL) }

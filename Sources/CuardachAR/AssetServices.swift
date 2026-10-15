@@ -64,7 +64,10 @@ public enum ImportPipeline {
         case unsupported(String)
         public var errorDescription: String? {
             switch self {
-            case .unsupported(let ext): "Files of type .\(ext) can't be imported."
+            case .unsupported(let ext):
+                UTType(filenameExtension: ext)?.conforms(to: .threeDContent) == true
+                    ? "\(ext.uppercased()) files can't be imported. Convert to USDZ on a Mac (Reality Converter or the AROR pipeline)."
+                    : "Files of type .\(ext) can't be imported."
             }
         }
     }

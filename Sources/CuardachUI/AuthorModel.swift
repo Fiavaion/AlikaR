@@ -55,6 +55,10 @@ public final class AuthorModel {
     @ObservationIgnored private var sinceObservation: TimeInterval = 0
     @ObservationIgnored private var manifestSaveTask: Task<Void, Never>?
 
+    /// The author session that is running, so `RootView` can save and stop it
+    /// before replacing the navigation stack for a file sent to the app.
+    static weak var active: AuthorModel?
+
     public init(bundle: ExperienceBundle) {
         self.bundle = bundle
         self.runtime = SceneRuntime(bundle: bundle, scene: ar.arView.scene)
@@ -71,6 +75,7 @@ public final class AuthorModel {
     // MARK: Lifecycle
 
     func start() {
+        Self.active = self
         location.start()
         ar.onAnchor = { [weak self] a in self?.anchorAppeared(a) }
         ar.onRelocalised = { [weak self] in self?.toast = String(localized: "Recognised this place. Your elements are back.") }
@@ -83,6 +88,7 @@ public final class AuthorModel {
     }
 
     func stop() async {
+        if Self.active === self { Self.active = nil }
         if previewEngine != nil { stopPreview() }
         await save()
         ar.pause()

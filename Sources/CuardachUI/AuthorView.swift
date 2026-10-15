@@ -15,13 +15,18 @@ enum AuthorSheet: String, Identifiable {
 /// appear, rather than every time SwiftUI re-initialises this view.
 public struct AuthorView: View {
     let bundle: ExperienceBundle
+    /// A file sent to the app to import as soon as author mode opens (PRD A1).
+    let importing: URL?
     @State private var model: AuthorModel?
 
-    public init(bundle: ExperienceBundle) { self.bundle = bundle }
+    public init(bundle: ExperienceBundle, importing: URL? = nil) {
+        self.bundle = bundle
+        self.importing = importing
+    }
 
     public var body: some View {
         if let model {
-            AuthorScreen(model: model)
+            AuthorScreen(model: model, importOnOpen: importing)
         } else {
             Color.black.ignoresSafeArea()
                 .toolbar(.hidden, for: .navigationBar)
@@ -32,6 +37,8 @@ public struct AuthorView: View {
 
 struct AuthorScreen: View {
     let model: AuthorModel
+    var importOnOpen: URL?
+    @State private var importedOnOpen = false
     @State private var sheet: AuthorSheet?
     @State private var showingFiles = false
     @State private var photoItem: PhotosPickerItem?
@@ -78,6 +85,13 @@ struct AuthorScreen: View {
         .statusBarHidden(model.cleanFrame)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear { model.start() }
+        .task {
+            // The same review, warnings and placement as Add > From Files.
+            guard let media = importOnOpen, !importedOnOpen else { return }
+            importedOnOpen = true
+            await model.importFile(media)
+            LibraryStore.discardStagedMedia(media)
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { Task { await model.save() } }
         }

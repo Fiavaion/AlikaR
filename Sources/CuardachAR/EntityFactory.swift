@@ -61,8 +61,8 @@ public enum EntityFactory {
                           observers: observer.map { [$0] } ?? [])
         case .audio:
             let url = try bundle.url(for: try require(assetPath))
-            let resource = try AudioFileResource.load(contentsOf: url, inputMode: .spatial,
-                                                      loadingStrategy: .preload, shouldLoop: element.playback?.loop ?? false)
+            let resource = try await AudioFileResource(contentsOf: url, configuration: .init(
+                loadingStrategy: .preload, shouldLoop: element.playback?.loop ?? false))
             built = Built(container: container, content: soundMarker(), videoPlayer: nil, audio: resource, clips: [])
         case .text:
             built = Built(container: container, content: textPanel(element.text ?? element.name), videoPlayer: nil, audio: nil, clips: [])
