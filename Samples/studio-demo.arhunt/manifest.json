@@ -1,0 +1,909 @@
+{
+  "annotations": [
+    {
+      "author": "Lecturer",
+      "created": "2026-10-15T11:00:00Z",
+      "elementId": "bottle",
+      "id": "crit-1",
+      "kind": "question",
+      "offset": [
+        0.12,
+        0.3,
+        0
+      ],
+      "resolved": false,
+      "text": "Does the ocean colourway still look right next to the other things on your desk, or only on its own?"
+    },
+    {
+      "author": "Peer",
+      "created": "2026-10-15T11:05:00Z",
+      "elementId": "slowlook",
+      "id": "crit-2",
+      "kind": "suggestion",
+      "offset": [
+        0,
+        0.2,
+        0
+      ],
+      "reply": "Done. It is half a metre wide now.",
+      "resolved": true,
+      "text": "The text is small at arm's length. Make it bigger?"
+    }
+  ],
+  "author": "Cuardach contributors",
+  "completionMessage": "That is the whole Studio tour: model, video, image, sound and text.",
+  "cover": "thumbnail.png",
+  "created": "2026-10-15T09:00:00Z",
+  "elements": [
+    {
+      "anchors": [
+        {
+          "id": "bottle-marker",
+          "imageFile": "markers/bottle.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/bottle-original.usdz",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "cycleVariant"
+              }
+            ],
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ]
+          ],
+          "id": "bottle-tap",
+          "retrigger": "immediately",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Microsoft",
+        "licence": "CC0-1.0",
+        "source": "Khronos glTF-Sample-Assets, WaterBottle (converted to USDZ, textures resized, two colourways added)",
+        "url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/WaterBottle"
+      },
+      "designSize": {
+        "depthM": 0.109,
+        "heightM": 0.26,
+        "lockScale": true,
+        "widthM": 0.109
+      },
+      "id": "bottle",
+      "kind": "model",
+      "label": {
+        "altText": "A plastic water bottle about 26 centimetres tall, yellow with a red cap and a grey base, printed with a small red triangle.",
+        "artist": "Microsoft (model), Cuardach (colourways)",
+        "dimensions": "109 × 260 × 109 mm",
+        "medium": "Product study at 1:1, USDZ",
+        "statement": "Tap the bottle to compare colourways and finishes in place. It is locked at its real size, so what you see on the table is what you would hold.",
+        "title": "Water bottle, three finishes",
+        "year": "2017 / 2026"
+      },
+      "name": "1 Model: water bottle",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "variants": [
+        {
+          "asset": "assets/bottle-ocean.usdz",
+          "id": "ocean",
+          "name": "Ocean",
+          "note": "The same print recoloured blue-green. Calmer, reads as cold drinks."
+        },
+        {
+          "asset": "assets/bottle-mono.usdz",
+          "id": "mono",
+          "name": "Matte mono",
+          "note": "Graphite and matte. Hides scratches best, feels the most serious."
+        },
+        {
+          "asset": "assets/bottle-original.usdz",
+          "id": "original",
+          "name": "Original",
+          "note": "Glossy yellow with a red cap. Loud, and easy to find in a bag."
+        }
+      ]
+    },
+    {
+      "anchors": [
+        {
+          "id": "clip-marker",
+          "imageFile": "markers/clip.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/clip.mp4",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ],
+            [
+              {
+                "type": "playVideo"
+              }
+            ]
+          ],
+          "id": "clip-tap",
+          "retrigger": "immediately",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Generated for this demo"
+      },
+      "id": "clip",
+      "kind": "video",
+      "label": {
+        "altText": "A flat video panel with moving colour and a drifting white bar.",
+        "medium": "H.264 video with sound, 8 seconds",
+        "statement": "Tap to play. It plays once, with sound, and a second tap restarts it.",
+        "title": "Video panel"
+      },
+      "name": "2 Video: panel",
+      "playback": {
+        "loop": false,
+        "muted": false,
+        "speed": 1
+      },
+      "transform": {
+        "position": [
+          0,
+          0.02,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.45,
+          0.45,
+          0.45
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "ring-marker",
+          "imageFile": "markers/clip.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/ring-alpha.mov",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "loop": true,
+                "type": "playVideo"
+              }
+            ]
+          ],
+          "id": "ring-start",
+          "retrigger": "never",
+          "trigger": "start"
+        },
+        {
+          "actions": [
+            [
+              {
+                "loop": true,
+                "type": "playVideo"
+              }
+            ]
+          ],
+          "id": "ring-tap",
+          "retrigger": "immediately",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Generated for this demo"
+      },
+      "id": "ring",
+      "kind": "video",
+      "label": {
+        "altText": "A pulsing disc of swirling orange, yellow and blue with no background.",
+        "medium": "HEVC with alpha, looping, muted",
+        "statement": "No rectangle: the video has an alpha channel, so only the ring is drawn.",
+        "title": "Transparent video"
+      },
+      "name": "2 Video: transparent ring",
+      "playback": {
+        "loop": true,
+        "muted": true,
+        "speed": 1
+      },
+      "transform": {
+        "position": [
+          0.4,
+          0.02,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "poster-marker",
+          "imageFile": "markers/poster.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/poster.png",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              },
+              {
+                "target": "badge",
+                "type": "setState",
+                "value": "visible"
+              },
+              {
+                "duration": 0.25,
+                "factor": 0.345,
+                "type": "scale"
+              },
+              {
+                "asset": "assets/chime.m4a",
+                "type": "playAudio"
+              }
+            ],
+            [
+              {
+                "duration": 0.25,
+                "factor": 0.3,
+                "type": "scale"
+              }
+            ]
+          ],
+          "id": "poster-tap",
+          "retrigger": "afterComplete",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Generated for this demo"
+      },
+      "faceViewer": false,
+      "id": "poster",
+      "kind": "image",
+      "label": {
+        "altText": "A square poster fading from navy to orange and yellow, with the words TAP this poster.",
+        "medium": "Image and sound",
+        "statement": "Tap the poster: it chimes and reveals a badge that was hidden.",
+        "title": "Poster"
+      },
+      "name": "3 Image: tap poster",
+      "transform": {
+        "position": [
+          0,
+          0.02,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.3,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "badge-marker",
+          "imageFile": "markers/poster.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/badge.png",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              },
+              {
+                "duration": 0.25,
+                "factor": 0.26,
+                "type": "scale"
+              }
+            ],
+            [
+              {
+                "duration": 0.25,
+                "factor": 0.2,
+                "type": "scale"
+              }
+            ]
+          ],
+          "id": "badge-tap",
+          "retrigger": "never",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Generated for this demo"
+      },
+      "faceViewer": true,
+      "id": "badge",
+      "kind": "image",
+      "label": {
+        "altText": "A round blue-green badge reading Found it, on a transparent background.",
+        "medium": "Transparent PNG",
+        "title": "Hidden badge"
+      },
+      "name": "3 Image: hidden badge",
+      "state": "hidden",
+      "transform": {
+        "position": [
+          0,
+          0.45,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.2,
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "ping-marker",
+          "imageFile": "markers/poster.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "asset": "assets/ping.wav",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "playAudio"
+              }
+            ],
+            [
+              {
+                "seconds": 3,
+                "type": "delay"
+              }
+            ]
+          ],
+          "id": "ping-near",
+          "proximityM": 0.5,
+          "retrigger": "afterComplete",
+          "trigger": "proximityEnter"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Generated for this demo"
+      },
+      "id": "ping",
+      "kind": "audio",
+      "label": {
+        "altText": "A short high ping that plays when the phone comes close to the poster.",
+        "medium": "Spatial sound",
+        "statement": "Move the phone to within about 50 cm of the poster and it pings. Pull back and come in again.",
+        "title": "Proximity ping"
+      },
+      "name": "3 Sound: proximity ping",
+      "playback": {
+        "audioFalloffM": 1,
+        "loop": false,
+        "muted": false,
+        "speed": 1
+      },
+      "transform": {
+        "position": [
+          0,
+          0.15,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "slowlook-marker",
+          "imageFile": "markers/slowlook.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "duration": 1.5,
+                "target": "stayed",
+                "type": "show"
+              }
+            ],
+            [
+              {
+                "target": "stayed",
+                "type": "setState",
+                "value": "found"
+              }
+            ]
+          ],
+          "dwellS": 4,
+          "id": "slowlook-dwell",
+          "proximityM": 2,
+          "retrigger": "never",
+          "trigger": "dwell"
+        }
+      ],
+      "faceViewer": true,
+      "id": "slowlook",
+      "kind": "text",
+      "label": {
+        "altText": "Hold still and look at this for four seconds."
+      },
+      "name": "4 Text: slow looking",
+      "text": "Hold still and look at this for four seconds.",
+      "transform": {
+        "position": [
+          0,
+          0.12,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "stayed-marker",
+          "imageFile": "markers/slowlook.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "behaviours": [],
+      "faceViewer": true,
+      "id": "stayed",
+      "kind": "text",
+      "label": {
+        "altText": "A line of text that appears after you keep this marker in view for four seconds."
+      },
+      "name": "4 Text: dwell reward",
+      "state": "hidden",
+      "text": "Thank you for staying. Looking is the interaction.",
+      "transform": {
+        "position": [
+          0,
+          0.3,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "daytime-marker",
+          "imageFile": "markers/slowlook.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "duration": 2,
+                "type": "show"
+              }
+            ]
+          ],
+          "id": "daytime-window",
+          "retrigger": "never",
+          "trigger": "timeWindow",
+          "window": {
+            "from": "06:00",
+            "to": "18:00"
+          }
+        }
+      ],
+      "faceViewer": true,
+      "id": "daytime",
+      "kind": "text",
+      "label": {
+        "altText": "A line of text that appears between six in the morning and six in the evening."
+      },
+      "name": "4 Text: daytime line",
+      "state": "hidden",
+      "text": "It is daytime. This line is only here between 6 am and 6 pm.",
+      "transform": {
+        "position": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "nighttime-marker",
+          "imageFile": "markers/slowlook.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "duration": 2,
+                "type": "show"
+              }
+            ]
+          ],
+          "id": "night-window",
+          "retrigger": "never",
+          "trigger": "timeWindow",
+          "window": {
+            "from": "18:00",
+            "to": "06:00"
+          }
+        }
+      ],
+      "faceViewer": true,
+      "id": "nighttime",
+      "kind": "text",
+      "label": {
+        "altText": "A line of text that appears between six in the evening and six in the morning."
+      },
+      "name": "4 Text: after dark line",
+      "state": "hidden",
+      "text": "It is after dark. This line is only here between 6 pm and 6 am.",
+      "transform": {
+        "position": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    }
+  ],
+  "id": "studio-demo",
+  "label": {
+    "altText": "A four-station demonstration of the app: a water bottle with three finishes, two videos, a poster with sound, and text that reacts to time.",
+    "artist": "Cuardach contributors",
+    "medium": "Augmented reality: 3D model, video, image, sound, text, printed markers",
+    "statement": "Four printed markers, one for each kind of work. Put each flat on a table, point the camera at it, and see what appears. Nothing here needs GPS, a scan or a particular room.",
+    "title": "Cuardach Studio Demo",
+    "year": "2026"
+  },
+  "schemaVersion": 1,
+  "title": "Cuardach Studio Demo"
+}
