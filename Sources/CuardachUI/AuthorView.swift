@@ -11,9 +11,27 @@ enum AuthorSheet: String, Identifiable {
     var id: String { rawValue }
 }
 
-/// Author mode screen.
+/// Author mode. The model (which owns an ARSession) is created once, on
+/// appear, rather than every time SwiftUI re-initialises this view.
 public struct AuthorView: View {
-    @State private var model: AuthorModel
+    let bundle: ExperienceBundle
+    @State private var model: AuthorModel?
+
+    public init(bundle: ExperienceBundle) { self.bundle = bundle }
+
+    public var body: some View {
+        if let model {
+            AuthorScreen(model: model)
+        } else {
+            Color.black.ignoresSafeArea()
+                .toolbar(.hidden, for: .navigationBar)
+                .onAppear { model = AuthorModel(bundle: bundle) }
+        }
+    }
+}
+
+struct AuthorScreen: View {
+    let model: AuthorModel
     @State private var sheet: AuthorSheet?
     @State private var showingFiles = false
     @State private var photoItem: PhotosPickerItem?
@@ -23,11 +41,7 @@ public struct AuthorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
 
-    public init(bundle: ExperienceBundle) {
-        _model = State(initialValue: AuthorModel(bundle: bundle))
-    }
-
-    public var body: some View {
+    var body: some View {
         ZStack {
             ARViewContainer(controller: model.ar) { model.handleTap($0) }
                 .ignoresSafeArea()

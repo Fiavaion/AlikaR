@@ -13,18 +13,20 @@ public final class LocationService: NSObject {
     public private(set) var coordinate: Coordinate?
     public private(set) var horizontalAccuracyM: Double?
     public private(set) var heading: Double?
-    public private(set) var authorization: CLAuthorizationStatus
+    public private(set) var authorization: CLAuthorizationStatus = .notDetermined
     public private(set) var speedMps: Double = 0
 
     @ObservationIgnored private let manager = CLLocationManager()
 
     public override init() {
-        authorization = manager.authorizationStatus
         super.init()
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.headingFilter = 2
-        manager.activityType = .fitness
+        MainActor.assumeIsolated {
+            authorization = manager.authorizationStatus
+            manager.delegate = self
+            manager.desiredAccuracy = kCLLocationAccuracyBest
+            manager.headingFilter = 2
+            manager.activityType = .fitness
+        }
     }
 
     public var isDenied: Bool { authorization == .denied || authorization == .restricted }

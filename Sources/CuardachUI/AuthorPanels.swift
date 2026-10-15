@@ -543,7 +543,7 @@ struct AnchorsPanel: View {
         }
     }
 
-    private func detail(_ a: Anchor) -> String {
+    private func detail(_ a: CuardachCore.Anchor) -> String {
         switch a.tier {
         case .worldmap:
             let when = a.capturedAt.flatMap(ISO8601.date(from:))?.formatted(date: .abbreviated, time: .shortened) ?? "—"

@@ -28,6 +28,13 @@ public enum EntityFactory {
         /// For audio elements and playAudio actions: the loaded sound.
         public var audio: AudioFileResource?
         public var clips: [String]
+        /// Notification tokens to remove when this content is replaced.
+        public var observers: [NSObjectProtocol] = []
+
+        public func tearDown() {
+            videoPlayer?.pause()
+            for o in observers { NotificationCenter.default.removeObserver(o) }
+        }
     }
 
     public static func build(_ element: Element, bundle: ExperienceBundle, assetOverride: String? = nil) async throws -> Built {
@@ -49,8 +56,9 @@ public enum EntityFactory {
             built = Built(container: container, content: try await imagePlane(url), videoPlayer: nil, audio: nil, clips: [])
         case .video:
             let url = try bundle.url(for: try require(assetPath))
-            let (plane, player) = try await videoPlane(url, playback: element.playback)
-            built = Built(container: container, content: plane, videoPlayer: player, audio: nil, clips: [])
+            let (plane, player, observer) = try await videoPlane(url, playback: element.playback)
+            built = Built(container: container, content: plane, videoPlayer: player, audio: nil, clips: [],
+                          observers: observer.map { [$0] } ?? [])
         case .audio:
             let url = try bundle.url(for: try require(assetPath))
             let resource = try AudioFileResource.load(contentsOf: url, inputMode: .spatial,
@@ -74,12 +82,16 @@ public enum EntityFactory {
     public static func swapContent(of built: inout Built, with element: Element, variantAsset: String,
                                    bundle: ExperienceBundle) async throws {
         let replacement = try await build(element, bundle: bundle, assetOverride: variantAsset)
+        built.tearDown()
         built.content.removeFromParent()
         let child = replacement.content
         child.removeFromParent()
         built.container.addChild(child)
         built.content = child
         built.clips = replacement.clips
+        built.videoPlayer = replacement.videoPlayer
+        built.audio = replacement.audio ?? built.audio
+        built.observers = replacement.observers
         fitCollision(built.container)
     }
 
@@ -112,7 +124,7 @@ public enum EntityFactory {
         let aspect = Float(texture.width) / Float(max(texture.height, 1))
         var material = UnlitMaterial()
         material.color = .init(tint: .white, texture: .init(texture))
-        material.blending = .transparent(opacity: 1)
+        material.blending = .transparent(opacity: 1.0)
         material.faceCulling = .none
         let w: Float = aspect >= 1 ? 1 : aspect
         let h: Float = aspect >= 1 ? 1 / aspect : 1
@@ -121,7 +133,7 @@ public enum EntityFactory {
         return plane
     }
 
-    static func videoPlane(_ url: URL, playback: Playback?) async throws -> (Entity, AVPlayer) {
+    static func videoPlane(_ url: URL, playback: Playback?) async throws -> (Entity, AVPlayer, NSObjectProtocol?) {
         let asset = AVURLAsset(url: url)
         var size = CGSize(width: 16, height: 9)
         if let track = try await asset.loadTracks(withMediaType: .video).first {
@@ -133,8 +145,9 @@ public enum EntityFactory {
         let player = AVPlayer(playerItem: item)
         player.isMuted = playback?.muted ?? false
         player.actionAtItemEnd = (playback?.loop ?? true) ? .none : .pause
+        var observer: NSObjectProtocol?
         if playback?.loop ?? true {
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak player] _ in
+            observer = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak player] _ in
                 player?.seek(to: .zero)
                 player?.play()
             }
@@ -146,7 +159,7 @@ public enum EntityFactory {
         let h: Float = aspect >= 1 ? 1 / aspect : 1
         let plane = ModelEntity(mesh: .generatePlane(width: w, height: h), materials: [material])
         plane.position.y = h / 2
-        return (plane, player)
+        return (plane, player, observer)
     }
 
     /// Sound elements are invisible to players; authors see a small marker.

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Per-frame facts about one resolved element, measured by the AR layer.
-public struct Observation: Sendable, Equatable {
+public struct ElementObservation: Sendable, Equatable {
     public var elementId: String
     /// Distance from the camera to the element's origin, in metres.
     public var distanceM: Double
@@ -126,7 +126,7 @@ public struct BehaviourEngine: Sendable {
     }
 
     /// Per-frame update with distances to resolved elements.
-    public mutating func update(observations: [Observation], at t: Double, minuteOfDay: Int? = nil) -> [EngineEvent] {
+    public mutating func update(observations: [ElementObservation], at t: Double, minuteOfDay: Int? = nil) -> [EngineEvent] {
         var out = advance(to: t)
         for o in observations where resolved.contains(o.elementId) {
             if o.distanceM <= foundDistanceM, isVisible(o.elementId) { out += markFound(o.elementId) }

@@ -1,6 +1,5 @@
 import CuardachAR
 import CuardachUI
-import RealityKit
 import SwiftUI
 #if canImport(GLTFKit2)
 import GLTFKit2
@@ -10,6 +9,7 @@ import GLTFKit2
 struct CuardachApp: App {
     /// A file, `cuardach://` link or https link the system asked us to open.
     @State private var incoming: URL?
+    @State private var store = LibraryStore()
 
     init() {
         #if canImport(GLTFKit2)
@@ -18,9 +18,9 @@ struct CuardachApp: App {
         #endif
     }
 
-    var body: some Scene {
+    var body: some SwiftUI.Scene {
         WindowGroup {
-            RootView(incoming: $incoming)
+            RootView(store: store, incoming: $incoming)
                 .onOpenURL { incoming = $0 }
         }
     }

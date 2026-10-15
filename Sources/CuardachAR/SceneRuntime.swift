@@ -23,6 +23,9 @@ public final class SceneRuntime {
     private var videoObservers: [Int: NSObjectProtocol] = [:]
     private var subscriptions: [Int: Cancellable] = [:]
     private var audioCache: [String: AudioFileResource] = [:]
+    private var moves: [AnimationPlaybackController] = []
+    /// Elements showing a variant rather than their base asset.
+    public private(set) var swapped: Set<String> = []
     private var tweens: [Tween] = []
     private weak var scene: RealityKit.Scene?
 
@@ -105,18 +108,18 @@ public final class SceneRuntime {
             guard let p = a.position else { return }
             var t = b.container.transform
             t.translation = SIMD3<Float>(Float(p.x), Float(p.y), Float(p.z))
-            b.container.move(to: t, relativeTo: b.container.parent, duration: a.duration ?? 1, timingFunction: .easeInOut)
+            moves.append(b.container.move(to: t, relativeTo: b.container.parent, duration: a.duration ?? 1, timingFunction: .easeInOut))
         case .scale:
             guard let f = a.factor else { return }
             var t = b.container.transform
             t.scale = SIMD3<Float>(repeating: Float(f))
-            b.container.move(to: t, relativeTo: b.container.parent, duration: a.duration ?? 1, timingFunction: .easeInOut)
+            moves.append(b.container.move(to: t, relativeTo: b.container.parent, duration: a.duration ?? 1, timingFunction: .easeInOut))
         case .rotate:
             // A per-frame spin, so turns of 180° and more go the long way round.
             let radians = Float((a.degrees ?? 0) * .pi / 180)
             tweens.append(Tween(entity: b.container, kind: .spin(radians: radians, done: 0), duration: max(0.01, a.duration ?? 1), invocation: nil))
         case .playAudio:
-            guard let resource = audioResource(for: a, element: inv.elementId) else { return finish(inv) }
+            guard let resource = audioResource(for: a, element: inv.elementId, awaits: inv.awaitsCompletion) else { return finish(inv) }
             let controller = b.container.playAudio(resource)
             if let v = a.volume { controller.gain = 20 * log10(max(0.001, v)) }
             audio[inv.id] = controller
@@ -138,16 +141,18 @@ public final class SceneRuntime {
         }
     }
 
-    private func audioResource(for a: Action, element: String) -> AudioFileResource? {
-        if let path = a.asset {
-            if let cached = audioCache[path] { return cached }
-            guard let url = try? bundle.url(for: path),
-                  let r = try? AudioFileResource.load(contentsOf: url, inputMode: .spatial, loadingStrategy: .preload, shouldLoop: a.loop ?? false)
-            else { return nil }
-            audioCache[path] = r
-            return r
-        }
-        return built[element]?.audio
+    /// The sound for a playAudio action. A sound the behaviour waits on is
+    /// always loaded non-looping, or its completion would never arrive.
+    private func audioResource(for a: Action, element: String, awaits: Bool) -> AudioFileResource? {
+        let loop = awaits ? false : (a.loop ?? false)
+        guard let path = a.asset ?? experience.element(id: element)?.asset else { return built[element]?.audio }
+        let key = "\(path)#\(loop)"
+        if let cached = audioCache[key] { return cached }
+        guard let url = try? bundle.url(for: path),
+              let r = try? AudioFileResource.load(contentsOf: url, inputMode: .spatial, loadingStrategy: .preload, shouldLoop: loop)
+        else { return nil }
+        audioCache[key] = r
+        return r
     }
 
     private func finish(_ inv: Invocation) {
@@ -189,6 +194,7 @@ public final class SceneRuntime {
         do {
             try await EntityFactory.swapContent(of: &b, with: element, variantAsset: variant.asset, bundle: bundle)
             built[id] = b
+            if variant.asset == element.asset { swapped.remove(id) } else { swapped.insert(id) }
         } catch {
             // A missing variant asset leaves the current one in place; the validator reports it.
         }
@@ -219,7 +225,19 @@ public final class SceneRuntime {
     public func stopAll() {
         for id in Array(animations.keys) + Array(audio.keys) { cancel(id) }
         for b in built.values { b.videoPlayer?.pause() }
+        moves.forEach { $0.stop() }
+        moves.removeAll()
         tweens.removeAll()
+    }
+
+    /// Puts every element that is showing a variant back on its base asset.
+    public func restoreBaseAssets() async {
+        for id in swapped {
+            guard var b = built[id], let element = experience.element(id: id), let base = element.asset else { continue }
+            try? await EntityFactory.swapContent(of: &b, with: element, variantAsset: base, bundle: bundle)
+            built[id] = b
+        }
+        swapped.removeAll()
     }
 }
 #endif

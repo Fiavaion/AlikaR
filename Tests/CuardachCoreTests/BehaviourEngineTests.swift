@@ -110,7 +110,7 @@ final class BehaviourEngineTests: XCTestCase {
         XCTAssertFalse(eng.isVisible("e"))
         XCTAssertTrue(eng.tap("e", at: 1).isEmpty)
         // Hidden elements are not found by walking up to them.
-        let near = eng.update(observations: [Observation(elementId: "e", distanceM: 0.5, inView: true)], at: 2)
+        let near = eng.update(observations: [ElementObservation(elementId: "e", distanceM: 0.5, inView: true)], at: 2)
         XCTAssertTrue(near.contains(.visibility(elementId: "e", visible: true, fadeS: 0.5)))
         XCTAssertFalse(near.contains(.found(elementId: "e")))
         XCTAssertTrue(eng.isVisible("e"))
@@ -123,7 +123,7 @@ final class BehaviourEngineTests: XCTestCase {
         var eng = BehaviourEngine(experience: experience([element("e", [enter, exit])]))
         _ = eng.elementResolved("e", at: 0)
         func at(_ d: Double, _ t: Double) -> [EngineEvent] {
-            eng.update(observations: [Observation(elementId: "e", distanceM: d, inView: false)], at: t)
+            eng.update(observations: [ElementObservation(elementId: "e", distanceM: d, inView: false)], at: t)
         }
         XCTAssertTrue(at(5, 1).isEmpty, "exit never fires before an enter")
         XCTAssertTrue(at(2.9, 2).contains(.state(elementId: "e", value: "in")))
@@ -134,16 +134,16 @@ final class BehaviourEngineTests: XCTestCase {
     func testFoundByApproach() {
         var eng = BehaviourEngine(experience: experience([element("e")]))
         _ = eng.elementResolved("e", at: 0)
-        XCTAssertTrue(eng.update(observations: [Observation(elementId: "e", distanceM: 1.5, inView: true)], at: 1).isEmpty)
-        let ev = eng.update(observations: [Observation(elementId: "e", distanceM: 0.9, inView: true)], at: 2)
+        XCTAssertTrue(eng.update(observations: [ElementObservation(elementId: "e", distanceM: 1.5, inView: true)], at: 1).isEmpty)
+        let ev = eng.update(observations: [ElementObservation(elementId: "e", distanceM: 0.9, inView: true)], at: 2)
         XCTAssertEqual(ev, [.found(elementId: "e"), .state(elementId: "e", value: "found")])
-        XCTAssertTrue(eng.update(observations: [Observation(elementId: "e", distanceM: 0.5, inView: true)], at: 3).isEmpty)
+        XCTAssertTrue(eng.update(observations: [ElementObservation(elementId: "e", distanceM: 0.5, inView: true)], at: 3).isEmpty)
     }
 
     func testUnresolvedElementsAreIgnored() {
         let b = Behaviour(trigger: .proximityEnter, actions: [[.setState("in")]])
         var eng = BehaviourEngine(experience: experience([element("e", [b])]))
-        XCTAssertTrue(eng.update(observations: [Observation(elementId: "e", distanceM: 0.1, inView: true)], at: 1).isEmpty)
+        XCTAssertTrue(eng.update(observations: [ElementObservation(elementId: "e", distanceM: 0.1, inView: true)], at: 1).isEmpty)
         XCTAssertTrue(eng.tap("e", at: 1).isEmpty)
     }
 
@@ -152,7 +152,7 @@ final class BehaviourEngineTests: XCTestCase {
         var eng = BehaviourEngine(experience: experience([element("e", [b])]))
         _ = eng.elementResolved("e", at: 0)
         func look(_ inView: Bool, _ t: Double) -> [EngineEvent] {
-            eng.update(observations: [Observation(elementId: "e", distanceM: 4, inView: inView)], at: t)
+            eng.update(observations: [ElementObservation(elementId: "e", distanceM: 4, inView: inView)], at: t)
         }
         _ = look(true, 1)
         _ = look(true, 2.5)

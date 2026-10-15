@@ -14,12 +14,16 @@ enum Route: Hashable {
 
 /// The app's root: library, routing, and handling of opened files and links.
 public struct RootView: View {
-    @State private var store = LibraryStore()
+    let store: LibraryStore
     @State private var path: [Route] = []
     @State private var error: String?
     @Binding var incoming: URL?
 
-    public init(incoming: Binding<URL?>) { _incoming = incoming }
+    /// `store` is owned by the App so it is created exactly once.
+    public init(store: LibraryStore, incoming: Binding<URL?>) {
+        self.store = store
+        _incoming = incoming
+    }
 
     public var body: some View {
         NavigationStack(path: $path) {
@@ -213,11 +217,13 @@ struct QRScannerView: UIViewControllerRepresentable {
                                            qualityLevel: .balanced, recognizesMultipleItems: false,
                                            isHighFrameRateTrackingEnabled: false, isHighlightingEnabled: true)
         vc.delegate = context.coordinator
-        try? vc.startScanning()
         return vc
     }
 
-    func updateUIViewController(_ vc: DataScannerViewController, context: Context) {}
+    func updateUIViewController(_ vc: DataScannerViewController, context: Context) {
+        // Start once the scanner is on screen, not while it's being built.
+        if !vc.isScanning { try? vc.startScanning() }
+    }
     func makeCoordinator() -> Coordinator { Coordinator(found: found) }
 
     final class Coordinator: NSObject, DataScannerViewControllerDelegate {

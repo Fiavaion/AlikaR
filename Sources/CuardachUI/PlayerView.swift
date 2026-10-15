@@ -4,20 +4,38 @@ import CuardachCore
 import MapKit
 import SwiftUI
 
-/// Player mode screen: camera, approach arrow, found count, map.
+/// Player mode. Like AuthorView, the model is created once, on appear.
 public struct PlayerView: View {
-    @State private var model: PlayerModel
+    let bundle: ExperienceBundle
+    let store: PlayerProgressStore
+    @State private var model: PlayerModel?
+
+    public init(bundle: ExperienceBundle, store: PlayerProgressStore) {
+        self.bundle = bundle
+        self.store = store
+    }
+
+    public var body: some View {
+        if let model {
+            PlayerScreen(model: model)
+        } else {
+            Color.black.ignoresSafeArea()
+                .toolbar(.hidden, for: .navigationBar)
+                .onAppear { model = PlayerModel(bundle: bundle, store: store) }
+        }
+    }
+}
+
+/// Player mode screen: camera, approach arrow, found count, map.
+struct PlayerScreen: View {
+    let model: PlayerModel
     @State private var showingMap = false
     @State private var showingList = false
     @State private var showingAbout = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    public init(bundle: ExperienceBundle, store: PlayerProgressStore) {
-        _model = State(initialValue: PlayerModel(bundle: bundle, store: store))
-    }
-
-    public var body: some View {
+    var body: some View {
         ZStack {
             ARViewContainer(controller: model.ar) { model.tap($0) }
                 .ignoresSafeArea()

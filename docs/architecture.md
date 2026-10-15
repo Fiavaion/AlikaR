@@ -78,6 +78,6 @@ The iOS layers can only be compiled with the iOS SDK. On Linux their sources are
 
 ## Known gaps
 
-- **First device build.** The AR and UI layers have not been compiled against the iOS 26 SDK. Most likely to need adjustment: `AudioFileResource.load` (deprecated in favour of async initialisers), `faceCulling` on materials, ReplayKit async signatures, and strict-concurrency warnings.
+- **First device build.** The AR and UI layers have not been compiled against the iOS 26 SDK. They have been through an independent API review, which caught and fixed a module-shadowing name clash, type ambiguities with SwiftUI and RealityKit, access control, actor isolation in initialisers, and several runtime issues. Still worth watching: `AudioFileResource.load` (deprecated in favour of async initialisers), `faceCulling` on materials, and strict-concurrency warnings.
 - **Field testing (PRD M0).** Relocalisation rates, geo availability at NCAD and the GPS fallback timing (30 s) are design values until the spike measures them.
 - **World maps in the sample.** `Samples/courtyard-hunt.arhunt` has markers and GPS but no scans, which can only be captured on a device. Its 3D assets are placeholder geometry.

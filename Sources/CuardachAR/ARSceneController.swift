@@ -45,11 +45,14 @@ public final class ARSceneController: NSObject {
     public override init() {
         arView = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
         super.init()
-        EntityFactory.registerComponents()
-        arView.session.delegate = self
-        arView.renderOptions.insert(.disableMotionBlur)
-        updateSubscription = arView.scene.subscribe(to: SceneEvents.Update.self) { [weak self] event in
-            self?.onUpdate?(event.deltaTime)
+        // NSObject's init is nonisolated; this class is only ever made on the main actor.
+        MainActor.assumeIsolated {
+            EntityFactory.registerComponents()
+            arView.session.delegate = self
+            arView.renderOptions.insert(.disableMotionBlur)
+            updateSubscription = arView.scene.subscribe(to: SceneEvents.Update.self) { [weak self] event in
+                self?.onUpdate?(event.deltaTime)
+            }
         }
     }
 
@@ -237,7 +240,7 @@ public final class ARSceneController: NSObject {
     // MARK: Observations (PRD P7)
 
     /// Distance and in-view state for each placed element.
-    public func observations() -> [Observation] {
+    public func observations() -> [ElementObservation] {
         guard let cam = cameraTransform else { return [] }
         let camPos = SIMD3<Float>(cam.columns.3.x, cam.columns.3.y, cam.columns.3.z)
         let bounds = arView.bounds
@@ -252,7 +255,7 @@ public final class ARSceneController: NSObject {
                 let forward = -SIMD3<Float>(cam.columns.2.x, cam.columns.2.y, cam.columns.2.z)
                 inView = central.contains(screen) && simd_dot(simd_normalize(p - camPos), forward) > 0
             }
-            return Observation(elementId: id, distanceM: d, inView: inView)
+            return ElementObservation(elementId: id, distanceM: d, inView: inView)
         }
     }
 }

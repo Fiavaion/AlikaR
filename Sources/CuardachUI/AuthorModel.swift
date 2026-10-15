@@ -352,7 +352,7 @@ public final class AuthorModel {
                 let anchorId = x.elements[i].anchors.first { $0.tier == .worldmap && $0.mapFile == currentMapFile }?.id ?? "\(id)-map"
                 mapAnchors.append((anchorId, rigid))
                 x.elements[i].transform = CuardachCore.Transform(scale: Vec3(Double(scale.x), Double(scale.y), Double(scale.z)))
-                var a = Anchor.worldmap(id: anchorId, mapFile: currentMapFile, transform: Matrix4(rigid), capturedAt: now,
+                var a = CuardachCore.Anchor.worldmap(id: anchorId, mapFile: currentMapFile, transform: Matrix4(rigid), capturedAt: now,
                                         mappingStatus: status, coordinate: location.coordinate)
                 if let old = x.elements[i].anchors.first(where: { $0.id == anchorId }) { a.priority = old.priority; a.extra = old.extra }
                 x.elements[i].anchors.removeAll { $0.id == anchorId }
@@ -462,12 +462,12 @@ public final class AuthorModel {
         let path = "\(BundleLayout.markers)/\(ExperienceBundle.slug(e.id)).png"
         guard let png = MarkerRenderer.patternImage(seed: e.id).pngData() else { return }
         do { try bundle.write(png, to: path) } catch { toast = error.localizedDescription; return }
-        // The printed pattern includes a one-cell quiet zone on each side.
-        let p = MarkerPattern(seed: e.id)
-        let printedWidth = widthM * Double(p.size + 2) / Double(p.size)
+        // The chosen width is the whole printed image, quiet zone included,
+        // so an 18 cm marker leaves A4's unprintable margins clear.
+        let printedWidth = widthM
         editElement(e.id, String(localized: "Add marker")) { el in
             el.anchors.removeAll { $0.tier == .image }
-            var a = Anchor.image(id: "\(e.id)-marker", imageFile: path, physicalWidthM: printedWidth)
+            var a = CuardachCore.Anchor.image(id: "\(e.id)-marker", imageFile: path, physicalWidthM: printedWidth)
             a.transform = nil  // linked on first sighting
             el.anchors.append(a)
         }
@@ -527,11 +527,13 @@ public final class AuthorModel {
         isPreviewing = false
         runtime.stopAll()
         runtime.showHiddenAsGhosts = true
-        for e in experience.elements {
-            // Variants may have swapped content; rebuild those from the base asset.
-            syncEntity(e.id)
-        }
+        for e in experience.elements { syncEntity(e.id) }
         refreshCritLayer()
+        // Variants may have swapped content during the preview.
+        Task {
+            await runtime.restoreBaseAssets()
+            for e in experience.elements { syncEntity(e.id) }
+        }
     }
 
     func runSimulation(_ elementId: String, _ index: Int) {
@@ -608,7 +610,7 @@ public final class AuthorModel {
     private func refreshCritLayer() {
         for e in experience.elements {
             guard let c = runtime.container(e.id) else { continue }
-            for child in c.children where child.name.hasPrefix("crit:") { child.removeFromParent() }
+            for child in Array(c.children) where child.name.hasPrefix("crit:") { child.removeFromParent() }
             guard showCritLayer, !isPreviewing, !cleanFrame else { continue }
             for n in experience.annotations where n.elementId == e.id && !n.resolved {
                 let mesh = MeshResource.generateText("\(n.author): \(n.text)", extrusionDepth: 0.001,

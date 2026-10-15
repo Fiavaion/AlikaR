@@ -30,8 +30,8 @@ public enum MarkerRenderer {
     }
 
     /// The reference image ARKit detects. `physicalWidthM` is the printed
-    /// width of the whole image including its quiet zone.
-    public static func referenceImage(for anchor: Anchor, image: UIImage) -> ARReferenceImage? {
+    /// width of the whole image, quiet zone included.
+    public static func referenceImage(for anchor: CuardachCore.Anchor, image: UIImage) -> ARReferenceImage? {
         guard let cg = image.cgImage, let w = anchor.physicalWidthM, w > 0 else { return nil }
         let ref = ARReferenceImage(cg, orientation: .up, physicalWidth: CGFloat(w))
         ref.name = anchor.id
@@ -50,8 +50,14 @@ public enum MarkerRenderer {
 
     public struct Sheet {
         public var element: Element
-        public var anchor: Anchor
+        public var anchor: CuardachCore.Anchor
         public var markerImage: UIImage
+
+        public init(element: Element, anchor: CuardachCore.Anchor, markerImage: UIImage) {
+            self.element = element
+            self.anchor = anchor
+            self.markerImage = markerImage
+        }
     }
 
     /// One A4 page per marker, pattern at its true printed width.
