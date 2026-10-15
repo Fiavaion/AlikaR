@@ -1,0 +1,647 @@
+{
+  "annotations": [
+    {
+      "author": "Lecturer",
+      "created": "2026-10-15T11:00:00Z",
+      "elementId": "lamp",
+      "id": "crit-1",
+      "kind": "question",
+      "offset": [
+        0,
+        1.4,
+        0
+      ],
+      "resolved": false,
+      "text": "Does the ash finish hold up next to the benches at night, or only by day?"
+    },
+    {
+      "author": "Peer",
+      "created": "2026-10-15T11:05:00Z",
+      "elementId": "heron",
+      "id": "crit-2",
+      "kind": "strength",
+      "reply": "Thanks, keeping it.",
+      "resolved": true,
+      "text": "Unlocking the key from the heron is a nice surprise."
+    }
+  ],
+  "author": "Cuardach sample",
+  "completionMessage": "You found everything. Thank you for looking closely.",
+  "cover": "thumbnail.png",
+  "created": "2026-10-15T09:00:00Z",
+  "elements": [
+    {
+      "anchors": [
+        {
+          "id": "heron-marker",
+          "imageFile": "markers/heron.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0.05,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "alt": 21.0,
+          "heading": 90.0,
+          "id": "heron-geo",
+          "lat": 53.343654,
+          "long": -6.2807808,
+          "priority": 0,
+          "tier": "geo"
+        },
+        {
+          "allowPlaneFallback": true,
+          "id": "heron-gps",
+          "lat": 53.343654,
+          "long": -6.2807808,
+          "priority": 4,
+          "radiusM": 15,
+          "tier": "gps"
+        }
+      ],
+      "asset": "assets/heron.usdz",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "degrees": 20,
+                "duration": 2,
+                "type": "rotate"
+              }
+            ]
+          ],
+          "id": "heron-idle",
+          "retrigger": "never",
+          "trigger": "start"
+        },
+        {
+          "actions": [
+            [
+              {
+                "degrees": 360,
+                "duration": 2,
+                "type": "rotate"
+              },
+              {
+                "asset": "assets/chime.wav",
+                "type": "playAudio"
+              }
+            ],
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ],
+            [
+              {
+                "target": "key",
+                "type": "setState",
+                "value": "visible"
+              }
+            ]
+          ],
+          "id": "heron-tap",
+          "retrigger": "afterComplete",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Own work"
+      },
+      "id": "heron",
+      "kind": "model",
+      "label": {
+        "altText": "A tall, narrow blue block standing in for a heron, about knee height.",
+        "artist": "Cuardach sample",
+        "medium": "3D model (placeholder geometry)",
+        "title": "Blue Heron",
+        "year": "2026"
+      },
+      "name": "Blue Heron",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "key-marker",
+          "imageFile": "markers/heron.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0.05,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "allowPlaneFallback": true,
+          "id": "key-gps",
+          "lat": 53.343654,
+          "long": -6.2807808,
+          "priority": 4,
+          "radiusM": 15,
+          "tier": "gps"
+        }
+      ],
+      "asset": "assets/key.usdz",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "duration": 0.4,
+                "factor": 1.6,
+                "type": "scale"
+              }
+            ],
+            [
+              {
+                "duration": 0.4,
+                "factor": 1.0,
+                "type": "scale"
+              }
+            ],
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ]
+          ],
+          "id": "key-tap",
+          "retrigger": "never",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Own work"
+      },
+      "id": "key",
+      "kind": "model",
+      "label": {
+        "altText": "A small gold bar, revealed after the heron is found."
+      },
+      "name": "Hidden Key",
+      "state": "hidden",
+      "transform": {
+        "position": [
+          0.4,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "lamp-marker",
+          "imageFile": "markers/lamp.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0.05,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "allowPlaneFallback": true,
+          "id": "lamp-gps",
+          "lat": 53.343564,
+          "long": -6.2804795,
+          "priority": 4,
+          "radiusM": 15,
+          "tier": "gps"
+        }
+      ],
+      "asset": "assets/lamp-brass.usdz",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "cycleVariant"
+              }
+            ]
+          ],
+          "id": "lamp-tap",
+          "retrigger": "immediately",
+          "trigger": "tap"
+        },
+        {
+          "actions": [
+            [
+              {
+                "type": "setVariant",
+                "variant": "ash"
+              }
+            ],
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ]
+          ],
+          "dwellS": 8,
+          "id": "lamp-dwell",
+          "proximityM": 4,
+          "retrigger": "never",
+          "trigger": "dwell"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Own work"
+      },
+      "designSize": {
+        "depthM": 0.3,
+        "heightM": 1.2,
+        "lockScale": true,
+        "widthM": 0.3
+      },
+      "id": "lamp",
+      "kind": "model",
+      "label": {
+        "altText": "A floor lamp, 1.2 metres tall, as a simple column.",
+        "dimensions": "300 × 1200 × 300 mm",
+        "medium": "Product study at 1:1",
+        "statement": "Tap to compare finishes in place. Look for eight seconds and it settles on the one the designer chose.",
+        "title": "Lamp, three finishes"
+      },
+      "name": "Lamp",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "variants": [
+        {
+          "asset": "assets/lamp-brass.usdz",
+          "id": "brass",
+          "name": "Brass",
+          "note": "Warm at dusk; dates quickly in daylight."
+        },
+        {
+          "asset": "assets/lamp-steel.usdz",
+          "id": "steel",
+          "name": "Brushed steel",
+          "note": "Reads as institutional against the brick."
+        },
+        {
+          "asset": "assets/lamp-ash.usdz",
+          "id": "ash",
+          "name": "Ash",
+          "note": "Closest to the courtyard benches."
+        }
+      ]
+    },
+    {
+      "anchors": [
+        {
+          "allowPlaneFallback": true,
+          "id": "bell-gps",
+          "lat": 53.3438248,
+          "long": -6.2801481,
+          "priority": 4,
+          "radiusM": 20,
+          "tier": "gps"
+        }
+      ],
+      "asset": "assets/bell.wav",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "playAudio"
+              }
+            ],
+            [
+              {
+                "seconds": 4,
+                "type": "delay"
+              }
+            ]
+          ],
+          "id": "bell-near",
+          "proximityM": 6,
+          "retrigger": "afterComplete",
+          "trigger": "proximityEnter"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Synthesised"
+      },
+      "id": "bell",
+      "kind": "audio",
+      "label": {
+        "medium": "Sound",
+        "title": "Bell"
+      },
+      "name": "Bell",
+      "playback": {
+        "audioFalloffM": 3,
+        "loop": false,
+        "muted": false,
+        "speed": 1
+      },
+      "transform": {
+        "position": [
+          0,
+          1.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "fragment-marker",
+          "imageFile": "markers/fragment.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0.05,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "allowPlaneFallback": true,
+          "id": "fragment-gps",
+          "lat": 53.3434381,
+          "long": -6.2809013,
+          "priority": 4,
+          "radiusM": 15,
+          "tier": "gps"
+        }
+      ],
+      "asset": "assets/map-fragment.png",
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "type": "setState",
+                "value": "found"
+              }
+            ]
+          ],
+          "id": "fragment-tap",
+          "trigger": "tap"
+        }
+      ],
+      "credit": {
+        "creator": "Cuardach contributors",
+        "licence": "CC0-1.0",
+        "source": "Own work"
+      },
+      "faceViewer": true,
+      "id": "fragment",
+      "kind": "image",
+      "label": {
+        "altText": "A chequered orange and cream square, like a torn piece of a map."
+      },
+      "name": "Map Fragment",
+      "transform": {
+        "position": [
+          0,
+          1.2,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "anchors": [
+        {
+          "id": "night-marker",
+          "imageFile": "markers/lamp.png",
+          "physicalWidthM": 0.18,
+          "priority": 1,
+          "tier": "image",
+          "transform": {
+            "position": [
+              0,
+              0.05,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "allowPlaneFallback": true,
+          "id": "night-gps",
+          "lat": 53.343564,
+          "long": -6.2804795,
+          "priority": 4,
+          "radiusM": 15,
+          "tier": "gps"
+        }
+      ],
+      "behaviours": [
+        {
+          "actions": [
+            [
+              {
+                "duration": 2,
+                "type": "show"
+              }
+            ]
+          ],
+          "id": "night-window",
+          "retrigger": "never",
+          "trigger": "timeWindow",
+          "window": {
+            "from": "18:00",
+            "to": "06:00"
+          }
+        }
+      ],
+      "faceViewer": true,
+      "id": "night-text",
+      "kind": "text",
+      "label": {
+        "altText": "A line of text that appears only between six in the evening and six in the morning."
+      },
+      "name": "After Dark",
+      "state": "hidden",
+      "text": "The courtyard keeps its own hours.",
+      "transform": {
+        "position": [
+          0,
+          2.0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "id": "sample-courtyard-hunt",
+  "label": {
+    "altText": "A courtyard walk with five pieces: a heron, a lamp, a bell, a map fragment and a hidden key.",
+    "artist": "Cuardach sample",
+    "medium": "Augmented reality: 3D models, sound, text, printed markers",
+    "statement": "A short walk around one courtyard, built to show what the app can do.\n\nFind the heron to unlock the key. Stand with the lamp long enough and it changes. After dark, a line of text appears that daytime visitors never see.",
+    "title": "Courtyard Hunt",
+    "year": "2026"
+  },
+  "schemaVersion": 1,
+  "siteHint": {
+    "lat": 53.3436,
+    "long": -6.2806,
+    "radiusM": 60
+  },
+  "title": "Courtyard Hunt"
+}

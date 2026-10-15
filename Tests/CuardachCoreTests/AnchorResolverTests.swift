@@ -92,6 +92,17 @@ final class AnchorResolverTests: XCTestCase {
         XCTAssertEqual(r.update(at: 65, player: near), [.placeOnNearestPlane(elementId: "bell")])
     }
 
+    func testPreferredSessionMode() {
+        let noGeo = AnchorResolver(experience: experience(), capabilities: .init(geoTracking: false, objectTracking: false))
+        XCTAssertEqual(noGeo.preferredMode(player: site), .world(mapFile: "maps/court.arworldmap"))
+        var geo = AnchorResolver(experience: experience(), capabilities: .init(geoTracking: true, objectTracking: false))
+        XCTAssertEqual(geo.preferredMode(player: site), .geo, "the heron is nearest and has a geo anchor")
+        let atBell = Geo.offset(site, eastM: 300, northM: 0)
+        XCTAssertEqual(geo.preferredMode(player: atBell), .world(mapFile: "maps/garden.arworldmap"))
+        _ = geo.anchorResolved("heron-geo")
+        XCTAssertEqual(geo.preferredMode(player: site), .world(mapFile: "maps/court.arworldmap"), "heron done; bell is next")
+    }
+
     func testNearestUnfound() {
         let x = experience()
         let n = x.nearestUnfound(from: Geo.offset(site, eastM: 250, northM: 0), found: [])

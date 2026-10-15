@@ -60,6 +60,13 @@ public struct ResolutionPlan: Sendable, Equatable {
     public var worldMap: String?
 }
 
+/// ARKit runs either geotracking or world tracking with a saved map, never
+/// both in one session. Image anchors work in either.
+public enum SessionMode: Sendable, Equatable {
+    case geo
+    case world(mapFile: String?)
+}
+
 /// Chooses, for every element, the best anchor that has resolved, walking
 /// each element's anchors in priority order (PRD P5, P6). Pure and
 /// time-injected like `BehaviourEngine`.
@@ -117,6 +124,24 @@ public struct AnchorResolver: Sendable {
             p.worldMap = maps.max { ($0.value.count, $1.key) < ($1.value.count, $0.key) }?.key
         }
         return p
+    }
+
+    /// Which session to run: geotracking when the nearest unresolved element
+    /// has a usable location anchor, otherwise world tracking with the best
+    /// map. Elements placed by a marker keep working in both.
+    public func preferredMode(player: Coordinate?) -> SessionMode {
+        let plan = plan(player: player)
+        guard capabilities.geoTracking, !plan.geo.isEmpty else { return .world(mapFile: plan.worldMap) }
+        let unresolved = elements.filter { current[$0.id] == .searching || current[$0.id] == .onNearestPlane }
+        let nearest: Element?
+        if let player {
+            nearest = unresolved.compactMap { e in e.coordinate.map { (e, Geo.distance(player, $0)) } }
+                .min { $0.1 < $1.1 }?.0
+        } else {
+            nearest = unresolved.first
+        }
+        guard let nearest else { return .world(mapFile: plan.worldMap) }
+        return candidates(for: nearest).contains { $0.tier == .geo } ? .geo : .world(mapFile: plan.worldMap)
     }
 
     /// The AR layer started relocalising against a world map.
