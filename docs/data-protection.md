@@ -4,7 +4,7 @@
 
 ## Summary
 
-Cuardach processes no personal data on any server, because it has no server. It has no accounts, analytics, advertising, crash-reporting SDKs or third-party trackers. Everything it stores stays on the device unless the user chooses to share a file.
+Cuardach processes no personal data on any server, because it has no server. It has no accounts, analytics, advertising, crash-reporting SDKs or third-party trackers. Everything it stores stays on the device unless the user chooses to share a file. For troubleshooting, the app writes technical events to Apple's on-device system log; it never includes locations or file contents, marks file names private (except the app-generated names of world-map scans), and is not collected or sent anywhere.
 
 ## What the app touches, and why
 

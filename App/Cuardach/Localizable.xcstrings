@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ files can't be imported. Convert to USDZ on a Mac (Reality Converter or the AROR pipeline).": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ní féidir comhaid %@ a iompórtáil. Tiontaigh go USDZ iad ar Mac (Reality Converter nó píblíne AROR)."
+          }
+        }
+      }
+    },
     "%lld of %lld found": {
       "localizations": {
         "ga": {
@@ -67,6 +77,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Cuir téacs leis"
+          }
+        }
+      }
+    },
+    "Add to which experience?": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuir le cén t-eispéireas?"
           }
         }
       }
@@ -287,6 +307,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Catalóg taispeántais"
+          }
+        }
+      }
+    },
+    "Files of type .%@ can't be imported.": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ní féidir comhaid de chineál .%@ a iompórtáil."
           }
         }
       }
@@ -607,6 +637,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Seinn"
+          }
+        }
+      }
+    },
+    "AR is still starting. Move the camera slowly for a moment, then try again.": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tá AR fós ag tosú. Bog an ceamara go mall ar feadh nóiméid, ansin bain triail eile as."
           }
         }
       }
@@ -977,6 +1017,16 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "D'aimsigh tú gach rud!"
+          }
+        }
+      }
+    },
+    "You'll place %@ at the crosshair, as with Add from Files.": {
+      "localizations": {
+        "ga": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cuirfidh tú %@ ag an gcrosghrua, díreach mar a dhéantar le Cuir leis ó Chomhaid."
           }
         }
       }

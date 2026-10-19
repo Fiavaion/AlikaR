@@ -4,6 +4,7 @@ import Combine
 import CuardachCore
 import RealityKit
 import UIKit
+import os
 
 /// Carries out `BehaviourEngine` events on RealityKit entities: animations,
 /// moves, spins, fades, sound, video and variant swaps. Reports completion
@@ -84,7 +85,11 @@ public final class SceneRuntime {
     }
 
     private func perform(_ inv: Invocation) {
-        guard let b = built[inv.elementId] else { return finish(inv) }
+        Log.behaviours.debug("Perform \(inv.action.type.rawValue, privacy: .public) on \(inv.elementId, privacy: .public)")
+        guard let b = built[inv.elementId] else {
+            Log.behaviours.info("Skipped \(inv.action.type.rawValue, privacy: .public): \(inv.elementId, privacy: .public) isn't built")
+            return finish(inv)
+        }
         let a = inv.action
         switch a.type {
         case .playAnimation:
@@ -152,7 +157,10 @@ public final class SceneRuntime {
         if let cached = audioCache[key] { return cached }
         guard let url = try? bundle.url(for: path),
               let r = try? AudioFileResource.load(contentsOf: url, configuration: .init(loadingStrategy: .preload, shouldLoop: loop))
-        else { return nil }
+        else {
+            Log.behaviours.error("Sound for \(element, privacy: .public) couldn't be loaded")
+            return nil
+        }
         audioCache[key] = r
         return r
     }
@@ -199,6 +207,7 @@ public final class SceneRuntime {
             if variant.asset == element.asset { swapped.remove(id) } else { swapped.insert(id) }
         } catch {
             // A missing variant asset leaves the current one in place; the validator reports it.
+            Log.behaviours.error("Variant \(variantId, privacy: .public) of \(id, privacy: .public) couldn't be shown: \((error as NSError).domain, privacy: .public) \((error as NSError).code)")
         }
     }
 

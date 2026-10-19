@@ -6,6 +6,7 @@ import Observation
 import RealityKit
 import ReplayKit
 import UIKit
+import os
 
 /// Author mode (PRD A1–A16, L1–L9): place, adjust, anchor, give behaviours,
 /// preview, save. Owns the AR session for the editing session and keeps the
@@ -81,6 +82,7 @@ public final class AuthorModel {
         ar.onRelocalised = { [weak self] in self?.toast = String(localized: "Recognised this place. Your elements are back.") }
         ar.onUpdate = { [weak self] dt in self?.frame(dt) }
         let map = bundle.fileExists(currentMapFile) ? try? WorldMapStore.load(currentMapFile, in: bundle) : nil
+        Log.session.notice("Author mode: \(self.experience.elements.count) elements, saved map \(map != nil ? "loaded" : "none", privacy: .public)")
         ar.runAuthoring(initialMap: map, images: referenceImages(for: experience, in: bundle))
         if map != nil {
             toast = String(localized: "Look around the space you scanned last time to bring your elements back.")
@@ -162,13 +164,17 @@ public final class AuthorModel {
         do {
             pendingImport = try await ImportPipeline.importAsset(url, into: bundle)
         } catch {
+            Log.importing.error("Import failed: \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
             toast = error.localizedDescription
         }
     }
 
     /// Places the reviewed import on the surface at the centre of the screen.
-    func placePendingImport(name: String) {
-        guard let r = pendingImport, !r.path.isEmpty else { pendingImport = nil; return }
+    /// Returns false, keeping the import for another try, while AR has no
+    /// surface or camera frame yet.
+    @discardableResult
+    func placePendingImport(name: String) -> Bool {
+        guard let r = pendingImport, !r.path.isEmpty else { pendingImport = nil; return true }
         var e = Element(name: name, kind: r.kind, asset: r.path)
         if r.kind == .video { e.playback = Playback(loop: true) }
         if r.kind == .image || r.kind == .video { e.faceViewer = false }
@@ -179,25 +185,30 @@ public final class AuthorModel {
             e.transform.scale = Vec3(s, s, s)
         }
         e.credit = Credit(creator: experience.author, source: String(localized: "Own work"))
+        guard add(e) else { return false }
         pendingImport = nil
-        add(e)
+        return true
     }
 
     func addText(_ text: String) {
         var e = Element(name: String(text.prefix(24)), kind: .text, asset: nil)
         e.text = text
         e.faceViewer = true
-        add(e)
+        if !add(e) { toast = Self.noSurfaceYet }
     }
 
-    private func add(_ element: Element) {
+    static var noSurfaceYet: String { String(localized: "AR is still starting. Move the camera slowly for a moment, then try again.") }
+
+    /// Adds an element at the crosshair; false if AR has no surface or camera frame yet.
+    private func add(_ element: Element) -> Bool {
         guard let world = ar.surfaceAtCentre() ?? inFrontOfCamera() else {
-            toast = String(localized: "Point at the floor or a wall until AR has found a surface.")
-            return
+            Log.anchors.notice("No surface or camera frame yet; element not added")
+            return false
         }
         edit(String(localized: "Add \(element.name)")) { $0.elements.append(element) }
         selection = element.id
         Task { await buildAndPlace(element.id) { c in self.ar.place(c, elementId: element.id, world: world, local: element.transform) } }
+        return true
     }
 
     private func inFrontOfCamera(distance: Float = 1) -> simd_float4x4? {
@@ -225,6 +236,7 @@ public final class AuthorModel {
             place(built.container)
             syncEntity(id)
         } catch {
+            Log.behaviours.error("Entity build failed for \(id, privacy: .public) (\(e.kind.rawValue, privacy: .public)): \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
             toast = String(localized: "“\(e.name)” couldn't be shown: \(error.localizedDescription)")
         }
     }
@@ -370,6 +382,7 @@ public final class AuthorModel {
             if !mapAnchors.isEmpty {
                 let map = try await ar.captureWorldMap(anchors: mapAnchors)
                 try bundle.write(try WorldMapStore.data(for: map), to: currentMapFile)
+                Log.anchors.notice("Saved world map \(self.currentMapFile, privacy: .public), mapping \(status, privacy: .public)")
                 if ar.mappingStatus == .limited {
                     toast = String(localized: "Saved, but the scan is weak. Walk slowly around the area and save again.")
                 }
@@ -389,6 +402,7 @@ public final class AuthorModel {
             }
             lastSaved = now
         } catch {
+            Log.anchors.error("Save failed, scan not saved: \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
             try? bundle.save()
             toast = String(localized: "Saved the experience, but not the scan: \(error.localizedDescription)")
         }
@@ -644,6 +658,7 @@ public final class AuthorModel {
             try await capture.saveToPhotos(image)
             toast = String(localized: "Saved to Photos.")
         } catch {
+            Log.capture.error("Documentation photo failed: \(error, privacy: .public)")
             toast = error.localizedDescription
         }
     }
@@ -662,6 +677,7 @@ public final class AuthorModel {
                 isRecording = true
             }
         } catch {
+            Log.capture.error("Recording \(self.isRecording ? "stop" : "start", privacy: .public) failed: \(error, privacy: .public)")
             isRecording = false
             cleanFrame = false
             toast = error.localizedDescription

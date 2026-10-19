@@ -564,6 +564,8 @@ struct ImportReviewPanel: View {
     let model: AuthorModel
     let close: () -> Void
     @State private var name = ""
+    /// AR had no surface or frame yet when Place was tapped; the import is kept.
+    @State private var notReady = false
 
     var body: some View {
         if let r = model.pendingImport {
@@ -586,17 +588,29 @@ struct ImportReviewPanel: View {
                 }
                 Section {
                     if !blocked {
-                        Button("Place at the crosshair") { model.placePendingImport(name: name.isEmpty ? String(localized: "Untitled") : name); close() }
-                            .buttonStyle(.borderedProminent)
+                        Button("Place at the crosshair") {
+                            if model.placePendingImport(name: name.isEmpty ? String(localized: "Untitled") : name) {
+                                close()
+                            } else {
+                                notReady = true
+                                AccessibilityNotification.Announcement(AuthorModel.noSurfaceYet).post()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
                     Button("Discard", role: .destructive) {
                         if !r.path.isEmpty, let u = try? model.bundle.url(for: r.path) { try? FileManager.default.removeItem(at: u) }
                         model.pendingImport = nil
                         close()
                     }
+                } footer: {
+                    if notReady { Text(AuthorModel.noSurfaceYet) }
                 }
             }
             .navigationTitle("Import")
+            // Swiping the sheet away would strand pendingImport and block later
+            // imports; Place or Discard are the ways out.
+            .interactiveDismissDisabled()
             .onAppear { name = (r.path as NSString).lastPathComponent.components(separatedBy: ".").first?.replacingOccurrences(of: "-", with: " ").capitalized ?? "" }
         }
     }

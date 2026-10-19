@@ -5,6 +5,7 @@ import CuardachCore
 import Observation
 import RealityKit
 import UIKit
+import os
 
 /// Player mode (PRD P1–P12): resolve anchors in priority order, run
 /// behaviours, guide the player, remember what they found on this device.
@@ -76,6 +77,7 @@ public final class PlayerModel {
             geo = await ARSceneController.geoAvailable(at: probe)
         }
         resolver = AnchorResolver(experience: experience, capabilities: .init(geoTracking: geo, objectTracking: false))
+        Log.anchors.notice("Player mode: \(self.experience.elements.count) elements, geotracking available \(geo)")
         runSession(resolver.preferredMode(player: location.coordinate))
     }
 
@@ -96,6 +98,7 @@ public final class PlayerModel {
     }
 
     private func runSession(_ mode: SessionMode) {
+        Log.anchors.notice("Resolver chose \(String(describing: mode), privacy: .public)")
         runtime.stopAll()
         currentMode = mode
         sessionAnchors.removeAll()
@@ -150,6 +153,7 @@ public final class PlayerModel {
 
     private func handle(_ events: [ResolverEvent]) {
         for e in events {
+            Log.anchors.info("Resolver: \(String(describing: e), privacy: .public)")
             switch e {
             case .place(let elementId, let anchorId, let tier):
                 guard let element = experience.element(id: elementId), let arAnchor = sessionAnchors[anchorId] else { continue }
@@ -194,6 +198,7 @@ public final class PlayerModel {
                 UIAccessibility.post(notification: .announcement,
                                      argument: String(localized: "\(element.label?.altText ?? element.name) is here."))
             } catch {
+                Log.behaviours.error("Entity build failed for \(element.id, privacy: .public) (\(element.kind.rawValue, privacy: .public)): \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
                 hint = String(localized: "“\(element.name)” couldn't be shown.")
             }
         }

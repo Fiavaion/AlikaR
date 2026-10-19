@@ -5,6 +5,7 @@ import CuardachCore
 import Observation
 import RealityKit
 import UIKit
+import os
 
 /// Owns the ARView and its ARSession for both modes. All ARKit and
 /// RealityKit calls live in this module so API changes between iOS
@@ -41,6 +42,9 @@ public final class ARSceneController: NSObject {
     @ObservationIgnored private var placed: [String: AnchorEntity] = [:]
     @ObservationIgnored private var updateSubscription: Cancellable?
     @ObservationIgnored private var expectingRelocalisation = false
+    /// Last logged states, so the per-frame and per-update callbacks log changes only.
+    @ObservationIgnored private var geoState: ARGeoTrackingStatus.State?
+    @ObservationIgnored private var markerTracked: [UUID: Bool] = [:]
 
     public override init() {
         arView = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
@@ -107,6 +111,10 @@ public final class ARSceneController: NSObject {
         geoLocalised = false
         hasDetectedPlane = false
         self.mode = mode
+        geoState = nil
+        markerTracked.removeAll()
+        let markers = (c as? ARWorldTrackingConfiguration)?.detectionImages?.count ?? (c as? ARGeoTrackingConfiguration)?.detectionImages?.count ?? 0
+        Log.session.notice("Run \(String(describing: mode), privacy: .public) session: relocalising \(relocalising), \(markers) markers, LiDAR \(self.hasLiDAR)")
         arView.session.run(c, options: [.resetTracking, .removeExistingAnchors])
     }
 
@@ -114,6 +122,7 @@ public final class ARSceneController: NSObject {
     /// content stays where it is.
     public func updateDetectionImages(_ images: Set<ARReferenceImage>) {
         guard let current = arView.session.configuration else { return }
+        Log.session.info("Detection images now \(images.count)")
         if let c = current as? ARWorldTrackingConfiguration {
             c.detectionImages = images
             c.maximumNumberOfTrackedImages = min(4, images.count)
@@ -126,6 +135,7 @@ public final class ARSceneController: NSObject {
     }
 
     public func pause() {
+        Log.session.info("Pause session")
         arView.session.pause()
         mode = .idle
     }
@@ -221,7 +231,14 @@ public final class ARSceneController: NSObject {
         for a in anchors {
             session.add(anchor: ARAnchor(name: Self.anchorPrefix + a.id, transform: a.world))
         }
-        return try await session.currentWorldMap()
+        do {
+            let map = try await session.currentWorldMap()
+            Log.anchors.notice("Captured world map: \(anchors.count) element anchors, \(map.anchors.count) anchors in all")
+            return map
+        } catch {
+            Log.anchors.error("World map capture failed: \(error, privacy: .public)")
+            throw error
+        }
     }
 
     // MARK: Geo
@@ -268,7 +285,17 @@ extension ARSceneController: ARSessionDelegate {
     nonisolated public func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         MainActor.assumeIsolated {
             for a in anchors {
-                if a is ARPlaneAnchor { hasDetectedPlane = true }
+                if a is ARPlaneAnchor, !hasDetectedPlane {
+                    hasDetectedPlane = true
+                    Log.anchors.info("First plane detected")
+                }
+                if let image = a as? ARImageAnchor {
+                    Log.anchors.notice("Marker detected: \(image.referenceImage.name ?? "?", privacy: .public)")
+                } else if a is ARGeoAnchor {
+                    Log.anchors.info("Geo anchor added: \(a.name ?? "?", privacy: .public)")
+                } else if let name = a.name, name.hasPrefix(Self.anchorPrefix) {
+                    Log.anchors.info("Anchor restored from world map: \(name, privacy: .public)")
+                }
                 onAnchor?(a)
             }
         }
@@ -277,13 +304,19 @@ extension ARSceneController: ARSessionDelegate {
     nonisolated public func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         MainActor.assumeIsolated {
             // Image anchors report tracking on update; geo anchors become usable once tracked.
-            for a in anchors where a is ARImageAnchor || a is ARGeoAnchor { onAnchor?(a) }
+            for a in anchors where a is ARImageAnchor || a is ARGeoAnchor {
+                if let image = a as? ARImageAnchor, markerTracked.updateValue(image.isTracked, forKey: image.identifier) != image.isTracked {
+                    Log.anchors.info("Marker \(image.referenceImage.name ?? "?", privacy: .public) \(image.isTracked ? "tracked" : "lost", privacy: .public)")
+                }
+                onAnchor?(a)
+            }
         }
     }
 
     nonisolated public func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         let state = camera.trackingState
         MainActor.assumeIsolated {
+            Log.session.info("Tracking \(String(describing: state), privacy: .public)")
             switch state {
             case .normal:
                 isTrackingNormal = true
@@ -291,6 +324,7 @@ extension ARSceneController: ARSessionDelegate {
                 if expectingRelocalisation {
                     expectingRelocalisation = false
                     isRelocalising = false
+                    Log.session.notice("Relocalised against the world map")
                     onRelocalised?()
                 }
             case .limited(let reason):
@@ -311,9 +345,17 @@ extension ARSceneController: ARSessionDelegate {
 
     nonisolated public func session(_ session: ARSession, didUpdate frame: ARFrame) {
         let status = frame.worldMappingStatus
-        let geo = frame.geoTrackingStatus?.state
+        let geoStatus = frame.geoTrackingStatus
+        let geo = geoStatus?.state
         MainActor.assumeIsolated {
-            if mappingStatus != status { mappingStatus = status }
+            if mappingStatus != status {
+                Log.session.info("World mapping \(WorldMapStore.status(status), privacy: .public)")
+                mappingStatus = status
+            }
+            if geoState != geo, let geoStatus {
+                geoState = geo
+                Log.session.info("Geo tracking state \(geoStatus.state.rawValue), reason \(geoStatus.stateReason.rawValue), accuracy \(geoStatus.accuracy.rawValue)")
+            }
             let localised = geo == .localized
             if geoLocalised != localised { geoLocalised = localised }
         }
@@ -321,7 +363,16 @@ extension ARSceneController: ARSessionDelegate {
 
     nonisolated public func session(_ session: ARSession, didFailWithError error: Error) {
         let message = (error as? ARError)?.localizedDescription ?? error.localizedDescription
+        Log.session.error("Session failed: \(error, privacy: .public)")
         MainActor.assumeIsolated { trackingHint = message }
+    }
+
+    nonisolated public func sessionWasInterrupted(_ session: ARSession) {
+        Log.session.notice("Session interrupted")
+    }
+
+    nonisolated public func sessionInterruptionEnded(_ session: ARSession) {
+        Log.session.notice("Session interruption ended")
     }
 }
 

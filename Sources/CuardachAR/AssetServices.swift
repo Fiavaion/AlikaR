@@ -6,6 +6,7 @@ import ImageIO
 import RealityKit
 import UIKit
 import UniformTypeIdentifiers
+import os
 
 /// GLB/glTF loading is injected by the app target, which links GLTFKit2
 /// (the one third-party dependency the PRD allows). Keeping it out of this
@@ -33,11 +34,17 @@ public enum WorldMapStore {
     }
 
     public static func load(_ relativePath: String, in bundle: ExperienceBundle) throws -> ARWorldMap {
-        let data = try Data(contentsOf: bundle.url(for: relativePath))
-        guard let map = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
-            throw CocoaError(.fileReadCorruptFile)
+        do {
+            let data = try Data(contentsOf: bundle.url(for: relativePath))
+            guard let map = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            Log.anchors.notice("Loaded world map \(relativePath, privacy: .public): \(map.anchors.count) anchors, \(data.count) bytes")
+            return map
+        } catch {
+            Log.anchors.error("World map \(relativePath, privacy: .public) couldn't be loaded: \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
+            throw error
         }
-        return map
     }
 
     public static func status(_ s: ARFrame.WorldMappingStatus) -> String {
@@ -66,8 +73,8 @@ public enum ImportPipeline {
             switch self {
             case .unsupported(let ext):
                 UTType(filenameExtension: ext)?.conforms(to: .threeDContent) == true
-                    ? "\(ext.uppercased()) files can't be imported. Convert to USDZ on a Mac (Reality Converter or the AROR pipeline)."
-                    : "Files of type .\(ext) can't be imported."
+                    ? String(localized: "\(ext.uppercased()) files can't be imported. Convert to USDZ on a Mac (Reality Converter or the AROR pipeline).")
+                    : String(localized: "Files of type .\(ext) can't be imported.")
             }
         }
     }
@@ -77,7 +84,11 @@ public enum ImportPipeline {
     @MainActor
     public static func importAsset(_ source: URL, into bundle: ExperienceBundle) async throws -> Result {
         let ext = source.pathExtension.lowercased()
-        guard let format = AssetPolicy.format(forExtension: ext) else { throw Failure.unsupported(ext) }
+        Log.importing.notice("Import \(source.lastPathComponent, privacy: .private) (.\(ext, privacy: .public))")
+        guard let format = AssetPolicy.format(forExtension: ext) else {
+            Log.importing.error("Import refused: unsupported .\(ext, privacy: .public)")
+            throw Failure.unsupported(ext)
+        }
 
         var working = source
         var cleanup: URL?
@@ -115,10 +126,16 @@ public enum ImportPipeline {
         }
         metrics.bytes = bytes
         let warnings = metrics.warnings(format: format)
+        Log.importing.info("Measured \(format.rawValue, privacy: .public): \(bytes) bytes, \(metrics.triangles ?? -1) triangles, \(metrics.animationClips.count) clips")
+        for w in warnings {
+            Log.importing.notice("Import warning (severity \(w.severity.rawValue)): \(w.message, privacy: .private)")
+        }
         if warnings.contains(where: { $0.severity == .blocking }) {
+            Log.importing.error("Import blocked by a warning; file not kept")
             return Result(path: "", kind: format.kind, metrics: metrics, warnings: warnings)
         }
         let path = try bundle.importFile(working, preferredName: source.deletingPathExtension().lastPathComponent)
+        Log.importing.notice("Imported as \(path, privacy: .private)")
         return Result(path: path, kind: format.kind, metrics: metrics, warnings: warnings)
     }
 

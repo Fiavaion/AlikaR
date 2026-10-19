@@ -158,6 +158,17 @@ struct ActivityView: UIViewControllerRepresentable {
     func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }
 
+/// The text to show a student for an error. CuardachCore's bundle and zip
+/// errors describe themselves in plain sentences but aren't `LocalizedError`,
+/// so their `localizedDescription` would be a generic system message.
+func readableMessage(_ error: Error) -> String {
+    switch error {
+    case let e as BundleError: e.description
+    case let e as ZipError: e.description
+    default: error.localizedDescription
+    }
+}
+
 /// Minute of the local day, for time-window triggers.
 func minuteOfDay(_ date: Date = Date()) -> Int {
     let c = Calendar.current.dateComponents([.hour, .minute], from: date)

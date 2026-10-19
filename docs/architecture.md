@@ -33,6 +33,14 @@ cuardach (CLI)                  uses CuardachCore only
 
 **Concurrency.** CuardachCore is strict Swift 6. The ARKit/SwiftUI targets are `@MainActor`, compiled in Swift 5 mode with complete concurrency checking reported as warnings, because ARKit's delegate API is not fully `Sendable`-annotated. Switch them to `.v6` once the first device build is clean.
 
+## Diagnostics
+
+The AR and UI layers write to Apple's unified log (`Log` in `CuardachAR/Diagnostics.swift`), subsystem `ie.ncad.cuardach`, with categories `import`, `ar-session`, `anchors`, `behaviours`, `library` and `capture`. They record state changes and failures, not frames: import measurements and warnings, tracking state and reason, world mapping and geotracking state, relocalisation, markers detected, tracked and lost, the resolver's session choice and events, world-map loads and saves, entity build failures, routing of files sent to the app, and capture errors.
+
+To read it, filter the Xcode console by `subsystem:ie.ncad.cuardach` while running from Xcode, or open Console.app with the iPhone connected and search for the subsystem (turn on Action > Include Info Messages; debug lines appear only with Include Debug Messages). After the fact, a sysdiagnose from the device holds the log archive.
+
+The log stays on the device; the app collects and sends nothing. Coordinates and file contents are never logged. Element and anchor ids and world-map file names are logged; file names and error texts that can contain them are marked `.private`, so they show in full only while the app runs attached to Xcode's debugger and appear as `<private>` elsewhere.
+
 ## Testing
 
 `swift test` runs 70 XCTest cases on macOS or Linux:

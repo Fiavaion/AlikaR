@@ -4,6 +4,7 @@ import CuardachCore
 import SwiftUI
 import UniformTypeIdentifiers
 import VisionKit
+import os
 
 /// Where an experience is opened.
 enum Route: Hashable {
@@ -84,21 +85,26 @@ public struct RootView: View {
     func open(_ url: URL) async {
         do {
             if url.isFileURL, !Self.isBundleFile(url) {
+                Log.library.notice("Incoming media \(url.lastPathComponent, privacy: .private)")
                 try openMedia(url)
                 return
             }
             let b: ExperienceBundle
             if url.isFileURL {
+                Log.library.notice("Incoming experience file \(url.lastPathComponent, privacy: .private)")
                 b = try store.open(file: url)
             } else if let link = DeepLink.parse(url) {
+                Log.library.notice("Incoming \(url.scheme ?? "?", privacy: .public) link, downloading")
                 b = try await store.download(link)
             } else {
                 throw URLError(.unsupportedURL)
             }
             await AuthorModel.active?.stop()
+            Log.library.notice("Opened experience \(b.experience.id, privacy: .public) to play")
             path = [.play(b.folder)]
         } catch {
-            self.error = (error as? CustomStringConvertible)?.description ?? error.localizedDescription
+            Log.library.error("Couldn't open incoming \(url.isFileURL ? "file" : "link", privacy: .public): \((error as NSError).domain, privacy: .public) \((error as NSError).code) \(error, privacy: .private)")
+            self.error = readableMessage(error)
         }
     }
 
@@ -112,6 +118,7 @@ public struct RootView: View {
     private func openMedia(_ url: URL) throws {
         let staged = try store.stageIncomingMedia(url)
         if let refusal = Self.importRefusal(staged) {
+            Log.library.error("Incoming media refused: .\(staged.pathExtension, privacy: .public)")
             LibraryStore.discardStagedMedia(staged)
             error = refusal
             return
@@ -134,8 +141,10 @@ public struct RootView: View {
     private func importMedia(_ file: URL, into choice: ExperienceBundle?) {
         do {
             let target = try choice ?? store.create(title: file.deletingPathExtension().lastPathComponent, author: authorName)
+            Log.library.notice("Incoming media goes to \(choice == nil ? "a new" : "an existing", privacy: .public) experience \(target.experience.id, privacy: .public)")
             mediaRoute = .authorImporting(target.folder, media: file)
         } catch {
+            Log.library.error("Couldn't create an experience for incoming media: \(error, privacy: .private)")
             LibraryStore.discardStagedMedia(file)
             self.error = error.localizedDescription
         }
@@ -255,7 +264,7 @@ struct LibraryView: View {
         }
         .fileImporter(isPresented: $importing, allowedContentTypes: [UTType(exportedAs: BundleLayout.uti), .zip]) { result in
             if case .success(let url) = result {
-                do { path.append(.play(try store.open(file: url).folder)) } catch { self.error = "\(error)" }
+                do { path.append(.play(try store.open(file: url).folder)) } catch { self.error = readableMessage(error) }
             }
         }
         .sheet(isPresented: $scanning) {
@@ -266,7 +275,7 @@ struct LibraryView: View {
                     return
                 }
                 Task {
-                    do { path.append(.play(try await store.download(link).folder)) } catch { self.error = error.localizedDescription }
+                    do { path.append(.play(try await store.download(link).folder)) } catch { self.error = readableMessage(error) }
                 }
             }
             .ignoresSafeArea()
