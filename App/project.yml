@@ -69,6 +69,26 @@ targets:
     dependencies:
       - target: Cuardach
 
+  CuardachAssetTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: CuardachAssetTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ie.ncad.cuardach.assettests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
+    dependencies:
+      - target: Cuardach
+      - package: Cuardach
+        product: CuardachCore
+      - package: Cuardach
+        product: CuardachAR
+      - package: GLTFKit2
+        product: GLTFKit2
+
 schemes:
   Cuardach:
     build:
@@ -77,3 +97,4 @@ schemes:
     test:
       targets:
         - CuardachUITests
+        - CuardachAssetTests
